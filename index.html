@@ -1,0 +1,739 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>油漆庫存管理</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;--bg2:#f5f5f4;--bg3:#efede9;
+  --text:#1a1a1a;--text2:#6b6b6b;--text3:#a8a8a8;
+  --border:rgba(0,0,0,0.12);--border2:rgba(0,0,0,0.2);
+  --radius:8px;--radius-lg:12px;
+  --green:#3B6D11;--green-bg:#EAF3DE;--green-bd:#C0DD97;
+  --amber:#854F0B;--amber-bg:#FAEEDA;--amber-bd:#FAC775;
+  --red:#A32D2D;--red-bg:#FCEBEB;--red-bd:#F7C1C1;
+  --blue:#185FA5;--blue-bg:#E6F1FB;
+}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;color:var(--text);background:var(--bg3);min-height:100vh}
+.app{max-width:680px;margin:0 auto;background:var(--bg);min-height:100vh}
+.header{padding:14px 16px 0;background:var(--bg);position:sticky;top:0;z-index:50;border-bottom:0.5px solid var(--border)}
+.header h1{font-size:17px;font-weight:600;margin-bottom:10px}
+.tabs{display:flex;gap:4px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.tabs::-webkit-scrollbar{display:none}
+.tab{padding:7px 13px;border-radius:var(--radius) var(--radius) 0 0;border:0.5px solid var(--border);border-bottom:none;background:transparent;cursor:pointer;font-size:13px;color:var(--text2);white-space:nowrap;flex-shrink:0}
+.tab.active{background:var(--bg);color:var(--text);font-weight:500;border-color:var(--border2);position:relative;bottom:-0.5px}
+.content{padding:14px 16px;padding-bottom:80px}
+.page{display:none}.page.active{display:block}
+.card{background:var(--bg);border:0.5px solid var(--border);border-radius:var(--radius-lg);padding:14px;margin-bottom:10px}
+.sec{font-size:15px;font-weight:500;margin-bottom:10px}
+.metrics{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.metric{background:var(--bg2);border-radius:var(--radius);padding:10px;text-align:center}
+.metric-label{font-size:11px;color:var(--text2);margin-bottom:3px}
+.metric-val{font-size:20px;font-weight:500}
+label{font-size:12px;color:var(--text2);display:block;margin-bottom:3px}
+input,select{width:100%;padding:8px 10px;border:0.5px solid var(--border2);border-radius:var(--radius);font-size:13px;font-family:inherit;background:var(--bg);color:var(--text);-webkit-appearance:none}
+input:focus,select:focus{outline:none;border-color:#999}
+.frow{display:grid;gap:8px;margin-bottom:8px}
+.c2{grid-template-columns:1fr 1fr}
+.c3{grid-template-columns:1fr 1fr 1fr}
+.btn{padding:8px 16px;border-radius:var(--radius);border:0.5px solid var(--border2);background:var(--bg);cursor:pointer;font-size:13px;font-family:inherit;color:var(--text)}
+.btn:active{opacity:.7}
+.btn.pri{background:var(--text);color:var(--bg);border-color:var(--text)}
+.btn.ok{color:var(--green);border-color:var(--green-bd);background:var(--green-bg)}
+.btn.del{color:var(--red);border-color:var(--red-bd)}
+.btn.sm{padding:5px 10px;font-size:12px}
+.btn-row{display:flex;justify-content:flex-end;gap:8px}
+.tbl-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;padding:7px 8px;font-weight:500;font-size:11px;color:var(--text2);border-bottom:0.5px solid var(--border);white-space:nowrap}
+td{padding:7px 8px;border-bottom:0.5px solid var(--border);vertical-align:middle}
+tr:last-child td{border-bottom:none}
+.badge{display:inline-block;padding:2px 7px;border-radius:99px;font-size:11px;font-weight:500}
+.bp{background:var(--amber-bg);color:var(--amber)}
+.bpa{background:var(--blue-bg);color:var(--blue)}
+.bd{background:var(--green-bg);color:var(--green)}
+.bw{background:var(--red-bg);color:var(--red)}
+.tag{display:inline-block;padding:1px 7px;border-radius:99px;font-size:11px;background:var(--bg2);border:0.5px solid var(--border)}
+.srow{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:0.5px solid var(--border)}
+.srow:last-child{border-bottom:none}
+.srow.warn{background:var(--amber-bg);border-radius:var(--radius);padding:9px 8px;margin-bottom:2px;border-bottom:none}
+.citem{display:flex;align-items:flex-start;gap:10px;padding:10px;border-radius:var(--radius);border:0.5px solid var(--border);margin-bottom:6px}
+.cart-preview{border:0.5px solid var(--border2);border-radius:var(--radius-lg);padding:14px;margin-top:10px;background:var(--bg2)}
+.cart-item{display:grid;grid-template-columns:2fr 1fr 1fr 28px;gap:6px;align-items:center;padding:6px 0;border-bottom:0.5px solid var(--border)}
+.cart-item:last-child{border-bottom:none}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:200;align-items:flex-end;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--bg);border-radius:var(--radius-lg) var(--radius-lg) 0 0;padding:20px;width:100%;max-width:680px;max-height:85vh;overflow-y:auto}
+.alert-warn{padding:9px 13px;border-radius:var(--radius);font-size:13px;margin-bottom:10px;background:var(--amber-bg);border:0.5px solid var(--amber-bd);color:var(--amber)}
+.syncbar{display:flex;align-items:center;justify-content:space-between;padding:7px 12px;background:var(--bg2);border-radius:var(--radius);margin-bottom:10px;font-size:12px;color:var(--text2)}
+.dot{width:8px;height:8px;border-radius:50%;background:#ccc;margin-right:6px;display:inline-block}
+.dot.ok{background:#639922}.dot.err{background:#E24B4A}.dot.spin{background:#EF9F27;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.empty{text-align:center;padding:20px;color:var(--text3);font-size:13px}
+.divider{border:none;border-top:0.5px solid var(--border);margin:10px 0}
+.stabs{display:flex;gap:4px;margin-bottom:12px}
+.stab{padding:5px 13px;border-radius:var(--radius);border:0.5px solid var(--border);cursor:pointer;font-size:12px;color:var(--text2);background:transparent}
+.stab.active{background:var(--bg2);color:var(--text);font-weight:500}
+.hint{font-size:12px;color:var(--text2);margin:-4px 0 8px}
+.price-block{background:var(--bg2);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px}
+.price-block-title{font-size:12px;color:var(--text2);margin-bottom:8px;font-weight:500}
+.price-row{display:grid;grid-template-columns:70px 1fr;gap:8px;align-items:center;margin-bottom:6px}
+.price-row:last-child{margin-bottom:0}
+.paint-card{border:0.5px solid var(--border);border-radius:var(--radius);padding:10px 12px;margin-bottom:8px}
+.paint-card:last-child{margin-bottom:0}
+.paint-prices{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px}
+.pp{font-size:12px;color:var(--text2)}
+.pp b{color:var(--text);font-weight:500}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>🎨 油漆庫存</h1>
+    <div class="tabs">
+      <button class="tab active" onclick="showPage('stock',this)">庫存</button>
+      <button class="tab" onclick="showPage('order',this)">叫貨</button>
+      <button class="tab" onclick="showPage('receive',this)">點貨</button>
+      <button class="tab" onclick="showPage('usage',this)">出庫</button>
+      <button class="tab" onclick="showPage('settings',this)">設定</button>
+    </div>
+  </div>
+  <div class="content">
+    <div class="syncbar">
+      <div><span class="dot spin" id="dot"></span><span id="sync-lbl">連線中...</span></div>
+      <button class="btn sm" onclick="loadAll()">重新整理</button>
+    </div>
+
+    <!-- 庫存 -->
+    <div class="page active" id="page-stock">
+      <div class="metrics">
+        <div class="metric"><div class="metric-label">總庫存桶數</div><div class="metric-val" id="st-total">-</div></div>
+        <div class="metric"><div class="metric-label">警戒品項</div><div class="metric-val" id="st-warn" style="color:var(--red)">-</div></div>
+        <div class="metric"><div class="metric-label">本月出庫</div><div class="metric-val" id="st-month">-</div></div>
+      </div>
+      <div id="warn-banner" style="display:none" class="alert-warn"></div>
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <div class="sec" style="margin:0">庫存明細</div>
+          <select id="stock-sz" onchange="renderStock()" style="width:auto;font-size:12px;padding:5px 8px">
+            <option value="">全部</option><option value="1G">1加侖</option><option value="3G">3加侖</option><option value="5G">5加侖</option>
+          </select>
+        </div>
+        <div id="stock-list"><div class="empty">載入中...</div></div>
+      </div>
+    </div>
+
+    <!-- 叫貨 -->
+    <div class="page" id="page-order">
+      <div class="card">
+        <div class="sec">新增品項至叫貨單</div>
+        <div class="frow c2">
+          <div><label>油漆品項</label><select id="o-paint"></select></div>
+          <div><label>尺寸</label><select id="o-size"><option value="1G">1 加侖</option><option value="3G">3 加侖</option><option value="5G">5 加侖</option></select></div>
+        </div>
+        <div class="frow c2">
+          <div><label>桶數</label><input type="number" id="o-qty" min="1" value="1"></div>
+          <div><label>叫貨日期</label><input type="date" id="o-date"></div>
+        </div>
+        <div class="btn-row"><button class="btn ok" onclick="addToCart()">＋ 加入清單</button></div>
+        <div id="cart-wrap" style="display:none">
+          <hr class="divider">
+          <div class="cart-preview">
+            <div style="font-size:13px;font-weight:500;margin-bottom:8px;color:var(--text2)">本次叫貨清單（截圖後可傳給廠商）</div>
+            <div style="display:grid;grid-template-columns:2fr 1fr 1fr 28px;gap:6px;padding:4px 0;border-bottom:0.5px solid var(--border);font-size:11px;color:var(--text2);font-weight:500">
+              <div>品項</div><div>尺寸</div><div>桶數</div><div></div>
+            </div>
+            <div id="cart-items"></div>
+            <div class="btn-row" style="margin-top:10px">
+              <button class="btn del sm" onclick="clearCart()">清空</button>
+              <button class="btn pri" onclick="submitOrder()">確認送出</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="sec">叫貨記錄</div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>日期</th><th>品項</th><th>尺寸</th><th>桶</th><th>批次</th><th>狀態</th></tr></thead>
+          <tbody id="order-tbody"><tr><td colspan="6" class="empty">載入中...</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 點貨 -->
+    <div class="page" id="page-receive">
+      <div class="card">
+        <div class="sec">待點貨單</div>
+        <div id="recv-list"><div class="empty">載入中...</div></div>
+      </div>
+    </div>
+
+    <!-- 出庫 -->
+    <div class="page" id="page-usage">
+      <div class="card">
+        <div class="sec">記錄出庫</div>
+        <div class="frow"><div><label>油漆品項 ＋ 尺寸（只顯示有庫存）</label>
+          <select id="u-combo" onchange="updateHint()"></select></div>
+        </div>
+        <div class="hint" id="u-hint"></div>
+        <div class="frow c2">
+          <div><label>桶數</label><input type="number" id="u-qty" min="1" value="1"></div>
+          <div><label>使用人員</label><select id="u-per"></select></div>
+        </div>
+        <div class="frow c2">
+          <div><label>工作件號</label><input type="text" id="u-job" placeholder="如 W2024-001"></div>
+          <div><label>備註</label><input type="text" id="u-note" placeholder="選填"></div>
+        </div>
+        <div class="btn-row"><button class="btn pri" onclick="addUsage()">確認出庫</button></div>
+      </div>
+      <div class="card">
+        <div class="sec">出庫明細</div>
+        <div class="tbl-wrap">
+          <table><thead><tr><th>日期</th><th>品項</th><th>桶</th><th>工作件號</th><th>人員</th><th>備註</th></tr></thead>
+          <tbody id="usage-tbody"><tr><td colspan="6" class="empty">載入中...</td></tr></tbody></table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 設定 -->
+    <div class="page" id="page-settings">
+      <div class="stabs">
+        <button class="stab active" onclick="showStab('paints',this)">油漆品項</button>
+        <button class="stab" onclick="showStab('persons',this)">人員管理</button>
+      </div>
+      <div id="stab-paints">
+        <div class="card">
+          <div class="sec">新增油漆品項</div>
+          <div class="frow c2">
+            <div><label>品項名稱</label><input type="text" id="pn-name" placeholder="如 水性白漆"></div>
+            <div><label>廠牌／型號</label><input type="text" id="pn-brand" placeholder="如 關西 K-100"></div>
+          </div>
+          <div class="price-block">
+            <div class="price-block-title">各尺寸單價（元／桶，不使用留空）</div>
+            <div class="price-row"><div style="font-size:13px;font-weight:500">1 加侖</div><input type="number" id="pn-p1" min="0" placeholder="單價"></div>
+            <div class="price-row"><div style="font-size:13px;font-weight:500">3 加侖</div><input type="number" id="pn-p3" min="0" placeholder="單價"></div>
+            <div class="price-row"><div style="font-size:13px;font-weight:500">5 加侖</div><input type="number" id="pn-p5" min="0" placeholder="單價"></div>
+          </div>
+          <div class="frow" style="margin-bottom:8px"><label>警戒庫存（桶）</label><input type="number" id="pn-alert" min="0" value="5"></div>
+          <div class="btn-row"><button class="btn pri" onclick="addPaint()">新增品項</button></div>
+        </div>
+        <div class="card"><div class="sec">品項列表</div><div id="paint-list"><div class="empty">載入中...</div></div></div>
+      </div>
+      <div id="stab-persons" style="display:none">
+        <div class="card">
+          <div class="sec">新增人員</div>
+          <div class="frow c2">
+            <div><label>姓名</label><input type="text" id="per-name" placeholder="員工姓名"></div>
+            <div><label>部門</label><input type="text" id="per-dept" placeholder="選填"></div>
+          </div>
+          <div class="btn-row"><button class="btn pri" onclick="addPerson()">新增人員</button></div>
+        </div>
+        <div class="card"><div class="sec">人員列表</div><div id="person-list"><div class="empty">載入中...</div></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 編輯油漆 Modal -->
+<div class="overlay" id="edit-paint-overlay">
+  <div class="modal">
+    <div style="font-size:16px;font-weight:500;margin-bottom:14px">編輯油漆品項</div>
+    <input type="hidden" id="ep-id">
+    <div class="frow c2">
+      <div><label>品項名稱</label><input type="text" id="ep-name"></div>
+      <div><label>廠牌／型號</label><input type="text" id="ep-brand"></div>
+    </div>
+    <div class="price-block">
+      <div class="price-block-title">各尺寸單價（元／桶）</div>
+      <div class="price-row"><div style="font-size:13px;font-weight:500">1 加侖</div><input type="number" id="ep-p1" min="0" placeholder="單價"></div>
+      <div class="price-row"><div style="font-size:13px;font-weight:500">3 加侖</div><input type="number" id="ep-p3" min="0" placeholder="單價"></div>
+      <div class="price-row"><div style="font-size:13px;font-weight:500">5 加侖</div><input type="number" id="ep-p5" min="0" placeholder="單價"></div>
+    </div>
+    <div class="frow" style="margin-bottom:12px"><label>警戒庫存（桶）</label><input type="number" id="ep-alert" min="0"></div>
+    <div class="btn-row">
+      <button class="btn sm" onclick="closeModal('edit-paint-overlay')">取消</button>
+      <button class="btn pri sm" onclick="saveEditPaint()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 編輯人員 Modal -->
+<div class="overlay" id="edit-person-overlay">
+  <div class="modal">
+    <div style="font-size:16px;font-weight:500;margin-bottom:14px">編輯人員</div>
+    <input type="hidden" id="eper-id">
+    <div class="frow c2">
+      <div><label>姓名</label><input type="text" id="eper-name"></div>
+      <div><label>部門</label><input type="text" id="eper-dept"></div>
+    </div>
+    <div class="btn-row">
+      <button class="btn sm" onclick="closeModal('edit-person-overlay')">取消</button>
+      <button class="btn pri sm" onclick="saveEditPerson()">儲存</button>
+    </div>
+  </div>
+</div>
+
+<!-- 點貨 Modal -->
+<div class="overlay" id="recv-overlay">
+  <div class="modal">
+    <div style="font-size:16px;font-weight:500;margin-bottom:14px">點貨確認</div>
+    <div id="recv-info" style="padding:9px;background:var(--bg2);border-radius:var(--radius);font-size:13px;margin-bottom:10px"></div>
+    <div class="frow c2">
+      <div><label>實際到貨桶數</label><input type="number" id="recv-qty" min="0"></div>
+      <div><label>送貨單號</label><input type="text" id="recv-dn" placeholder="如 DN-001"></div>
+    </div>
+    <div class="frow" style="margin-bottom:10px"><label>備註</label><input type="text" id="recv-note"></div>
+    <div id="recv-warn" style="display:none" class="alert-warn"></div>
+    <div class="btn-row">
+      <button class="btn sm" onclick="closeModal('recv-overlay')">取消</button>
+      <button class="btn ok sm" onclick="confirmReceive()">確認到貨＋更新庫存</button>
+    </div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, doc, setDoc, deleteDoc, getDocs, updateDoc } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBCSRwTMDf7oMh6tVYvgpfTIcJdm5F4pLU",
+  authDomain: "paint-inventory-fc3db.firebaseapp.com",
+  projectId: "paint-inventory-fc3db",
+  storageBucket: "paint-inventory-fc3db.firebasestorage.app",
+  messagingSenderId: "580409447672",
+  appId: "1:580409447672:web:d626f89be5403be7dd170d"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+const SZ = {'1G':'1加侖','3G':'3加侖','5G':'5加侖'};
+let DB = {paints:{}, persons:{}, stock:{}, orders:{}, usages:{}};
+let cart = [];
+let recvTarget = null;
+
+function uid(){ return Date.now().toString(36)+Math.random().toString(36).slice(2,5); }
+function setDot(s,msg){ document.getElementById('dot').className='dot '+s; document.getElementById('sync-lbl').textContent=msg; }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+window.closeModal = closeModal;
+
+async function fsSet(col, id, data){ await setDoc(doc(db, col, id), data); }
+async function fsDel(col, id){ await deleteDoc(doc(db, col, id)); }
+async function fsGetAll(col){
+  const snap = await getDocs(collection(db, col));
+  const result = {};
+  snap.forEach(d => result[d.id] = d.data());
+  return result;
+}
+
+window.loadAll = async function(){
+  setDot('spin','載入中...');
+  try {
+    const [paints, persons, stock, orders, usages] = await Promise.all([
+      fsGetAll('paints'), fsGetAll('persons'), fsGetAll('stock'),
+      fsGetAll('orders'), fsGetAll('usages')
+    ]);
+    DB = {paints, persons, stock, orders, usages};
+    setDot('ok','已同步 '+new Date().toLocaleTimeString('zh-TW',{hour:'2-digit',minute:'2-digit'}));
+    renderAll();
+  } catch(e) {
+    setDot('err','連線失敗：'+e.message);
+  }
+};
+
+function renderAll(){
+  renderStock(); renderOrders(); renderReceive();
+  refreshPaintSel(); refreshComboSel(); refreshPerSel();
+  renderUsage(); renderSettings();
+}
+
+// ── 工具 ──
+function gstock(pid,sz){ return (DB.stock[pid+'_'+sz]||{qty:0}).qty||0; }
+function hasRecord(pid,sz){ return !!(DB.stock[pid+'_'+sz]); }
+function getPrice(p,sz){ return p.prices&&p.prices[sz]?parseFloat(p.prices[sz])||0:0; }
+function today(){ return new Date().toLocaleDateString('zh-TW'); }
+function getWarnItems(){
+  return Object.values(DB.paints).flatMap(p=>
+    ['1G','3G','5G'].filter(sz=>hasRecord(p.id,sz)).map(sz=>{
+      const q=gstock(p.id,sz), a=parseInt(p.alert)||0;
+      return a>0&&q<=a?{paint:p,sz,q,alert:a}:null;
+    }).filter(Boolean)
+  );
+}
+
+// ── 頁面 ──
+window.showPage = function(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  el.classList.add('active');
+};
+window.showStab = function(name,el){
+  ['paints','persons'].forEach(n=>document.getElementById('stab-'+n).style.display=n===name?'block':'none');
+  document.querySelectorAll('.stab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+};
+
+// ── 庫存 ──
+window.renderStock = function(){
+  const f=document.getElementById('stock-sz').value;
+  const list=document.getElementById('stock-list');
+  const rows=[];
+  Object.values(DB.paints).forEach(p=>{
+    ['1G','3G','5G'].forEach(sz=>{
+      if(f&&f!==sz) return;
+      if(!hasRecord(p.id,sz)&&!f) return;
+      const q=gstock(p.id,sz);
+      if(q===0&&!f) return;
+      const a=parseInt(p.alert)||0;
+      rows.push({p,sz,q,warn:hasRecord(p.id,sz)&&a>0&&q<=a,pr:getPrice(p,sz)});
+    });
+  });
+  if(!rows.length){list.innerHTML='<div class="empty">尚無庫存資料</div>';return;}
+  list.innerHTML=rows.map(r=>`
+    <div class="srow${r.warn?' warn':''}">
+      <div>
+        <span style="font-weight:500${r.warn?';color:var(--amber)':''}">${r.p.name}</span>
+        <span style="font-size:11px;color:${r.warn?'var(--amber)':'var(--text2)'};margin-left:5px">${r.p.brand}</span>
+        <span class="tag" style="margin-left:5px">${SZ[r.sz]}</span>
+        ${r.pr?`<span style="font-size:12px;color:var(--text2);margin-left:8px">$${r.pr.toLocaleString()}/桶</span>`:''}
+        ${r.warn?`<span class="badge bw" style="margin-left:5px">低於警戒${r.p.alert}桶</span>`:''}
+      </div>
+      <div style="display:flex;align-items:baseline;gap:3px">
+        <span style="font-size:18px;font-weight:500;${r.warn?'color:var(--red)':''}">${r.q}</span>
+        <span style="font-size:12px;color:var(--text2)">桶</span>
+      </div>
+    </div>`).join('');
+  let total=0;
+  Object.values(DB.paints).forEach(p=>['1G','3G','5G'].forEach(sz=>total+=gstock(p.id,sz)));
+  document.getElementById('st-total').textContent=total;
+  const warns=getWarnItems();
+  document.getElementById('st-warn').textContent=warns.length;
+  const now=new Date(),y=now.getFullYear(),m=now.getMonth();
+  const mq=Object.values(DB.usages).filter(u=>{const d=new Date(u.ts);return d.getFullYear()===y&&d.getMonth()===m}).reduce((a,u)=>a+parseInt(u.qty||0),0);
+  document.getElementById('st-month').textContent=mq;
+  const banner=document.getElementById('warn-banner');
+  if(warns.length){banner.style.display='block';banner.innerHTML='⚠️ 庫存警戒：'+warns.map(w=>`${w.paint.name} ${SZ[w.sz]} 剩${w.q}桶（警戒${w.alert}桶）`).join('　|　');}
+  else banner.style.display='none';
+};
+
+// ── 叫貨 ──
+function refreshPaintSel(){
+  const el=document.getElementById('o-paint');if(!el)return;
+  el.innerHTML='<option value="">選擇油漆</option>'+Object.values(DB.paints).map(p=>`<option value="${p.id}">${p.name}（${p.brand}）</option>`).join('');
+}
+window.addToCart = function(){
+  const pid=document.getElementById('o-paint').value;
+  const sz=document.getElementById('o-size').value;
+  const qty=parseInt(document.getElementById('o-qty').value)||0;
+  const dt=document.getElementById('o-date').value;
+  if(!pid){alert('請選擇油漆品項');return;}
+  if(qty<1){alert('桶數需大於0');return;}
+  if(!dt){alert('請填寫叫貨日期');return;}
+  const p=DB.paints[pid];
+  cart.push({pid,sz,qty,dt,pname:p.name,brand:p.brand,_cid:uid()});
+  document.getElementById('o-qty').value=1;
+  renderCart();
+};
+function renderCart(){
+  const wrap=document.getElementById('cart-wrap');
+  if(!cart.length){wrap.style.display='none';return;}
+  wrap.style.display='block';
+  document.getElementById('cart-items').innerHTML=cart.map(c=>`
+    <div class="cart-item">
+      <div><b style="font-size:13px">${c.pname}</b><br><span style="font-size:11px;color:var(--text2)">${c.brand}　${c.dt}</span></div>
+      <div style="font-size:13px">${SZ[c.sz]}</div>
+      <div style="font-size:13px">${c.qty}桶</div>
+      <button class="btn del sm" style="padding:3px 7px" onclick="removeCart('${c._cid}')">✕</button>
+    </div>`).join('');
+}
+window.removeCart = function(cid){cart=cart.filter(c=>c._cid!==cid);renderCart();};
+window.clearCart = function(){if(!confirm('確定清空?'))return;cart=[];renderCart();};
+window.submitOrder = async function(){
+  if(!cart.length){alert('叫貨清單為空');return;}
+  const batchId='PO-'+Date.now().toString().slice(-6);
+  setDot('spin','送出中...');
+  try {
+    await Promise.all(cart.map(c=>{
+      const id=uid();
+      return fsSet('orders',id,{id,pid:c.pid,sz:c.sz,qty:c.qty,dt:c.dt,batchId,status:'pending',received:0,pname:c.pname,recvNote:''});
+    }));
+    cart=[];renderCart();
+    await loadAll();
+    alert('叫貨單已送出！批次：'+batchId);
+  } catch(e){ setDot('err','送出失敗'); }
+};
+window.renderOrders = function(){
+  refreshPaintSel();
+  const tb=document.getElementById('order-tbody');
+  const orders=Object.values(DB.orders);
+  if(!orders.length){tb.innerHTML='<tr><td colspan="6" class="empty">尚無叫貨記錄</td></tr>';return;}
+  const sm={pending:'<span class="badge bp">待點貨</span>',partial:'<span class="badge bpa">部分到貨</span>',done:'<span class="badge bd">已完成</span>'};
+  tb.innerHTML=orders.sort((a,b)=>b.dt>a.dt?1:-1).map(o=>`<tr>
+    <td style="font-size:11px">${o.dt}</td><td>${o.pname}</td><td>${SZ[o.sz]||o.sz}</td>
+    <td>${o.qty}</td><td style="font-size:11px">${o.batchId||'-'}</td><td>${sm[o.status]||o.status}</td>
+  </tr>`).join('');
+};
+
+// ── 點貨 ──
+window.renderReceive = function(){
+  const list=document.getElementById('recv-list');
+  const pending=Object.values(DB.orders).filter(o=>o.status!=='done');
+  if(!pending.length){list.innerHTML='<div class="empty">目前無待確認叫貨單</div>';return;}
+  const groups={};
+  pending.forEach(o=>{if(!groups[o.batchId])groups[o.batchId]=[];groups[o.batchId].push(o);});
+  list.innerHTML=Object.entries(groups).map(([bid,orders])=>`
+    <div style="margin-bottom:14px">
+      <div style="font-size:12px;color:var(--text2);margin-bottom:6px;font-weight:500">批次 ${bid}</div>
+      ${orders.map(o=>`
+        <div class="citem">
+          <div style="flex:1">
+            <div style="font-weight:500">${o.pname} <span class="tag">${SZ[o.sz]||o.sz}</span></div>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px">叫${o.qty}桶　到${o.received}桶　待${parseInt(o.qty)-parseInt(o.received)}桶</div>
+          </div>
+          <button class="btn sm ok" onclick="openRecv('${o.id}')">點貨</button>
+        </div>`).join('')}
+    </div>`).join('');
+};
+window.openRecv = function(oid){
+  recvTarget=oid;
+  const o=DB.orders[oid];
+  document.getElementById('recv-info').innerHTML=`<b>${o.pname}</b> ${SZ[o.sz]||o.sz}　叫${o.qty}桶，已到${o.received}桶，尚待<b>${parseInt(o.qty)-parseInt(o.received)}</b>桶`;
+  document.getElementById('recv-qty').value=parseInt(o.qty)-parseInt(o.received);
+  document.getElementById('recv-dn').value='';
+  document.getElementById('recv-note').value='';
+  document.getElementById('recv-warn').style.display='none';
+  document.getElementById('recv-overlay').classList.add('open');
+};
+window.confirmReceive = async function(){
+  const o=DB.orders[recvTarget];
+  const qty=parseInt(document.getElementById('recv-qty').value)||0;
+  const dn=document.getElementById('recv-dn').value.trim();
+  const note=document.getElementById('recv-note').value.trim();
+  if(qty<0){alert('數量不能為負');return;}
+  const rem=parseInt(o.qty)-parseInt(o.received);
+  if(qty>rem){
+    document.getElementById('recv-warn').textContent=`注意：到貨數（${qty}）超過尚待數（${rem}），多入庫${qty-rem}桶`;
+    document.getElementById('recv-warn').style.display='block';
+    if(!confirm('到貨數超過叫貨數，確定繼續?'))return;
+  }
+  const newRec=parseInt(o.received)+qty;
+  const remarks=[dn?'送貨單號：'+dn:'',note].filter(Boolean).join('　');
+  const newStatus=newRec>=parseInt(o.qty)?'done':'partial';
+  const stockKey=o.pid+'_'+o.sz;
+  const newQty=gstock(o.pid,o.sz)+qty;
+  setDot('spin','更新中...');
+  try {
+    await Promise.all([
+      fsSet('orders',o.id,{...o,received:newRec,status:newStatus,recvNote:(o.recvNote?o.recvNote+'　':'')+remarks}),
+      fsSet('stock',stockKey,{key:stockKey,qty:newQty})
+    ]);
+    closeModal('recv-overlay');
+    await loadAll();
+    alert(`已確認到貨${qty}桶，庫存已更新！`);
+  } catch(e){ setDot('err','更新失敗'); }
+};
+
+// ── 出庫 ──
+function refreshComboSel(){
+  const el=document.getElementById('u-combo');if(!el)return;
+  let opts=['<option value="">請選擇（只顯示有庫存）</option>'];
+  Object.values(DB.paints).forEach(p=>{
+    ['1G','3G','5G'].forEach(sz=>{
+      const q=gstock(p.id,sz);
+      if(q>0){const pr=getPrice(p,sz);opts.push(`<option value="${p.id}_${sz}">${p.name}（${p.brand}）— ${SZ[sz]}　${q}桶${pr?' ．$'+pr.toLocaleString()+'/桶':''}</option>`);}
+    });
+  });
+  if(opts.length===1) opts.push('<option disabled>目前無庫存品項</option>');
+  el.innerHTML=opts.join('');
+  updateHint();
+}
+window.updateHint = function(){
+  const val=document.getElementById('u-combo').value;
+  const hint=document.getElementById('u-hint');
+  if(!val){hint.textContent='';return;}
+  const[pid,sz]=val.split('_');
+  const p=DB.paints[pid];
+  const pr=p?getPrice(p,sz):0;
+  hint.textContent=`現有庫存：${gstock(pid,sz)}桶${pr?'　單價：$'+pr.toLocaleString()+'/桶':''}`;
+};
+function refreshPerSel(){
+  const el=document.getElementById('u-per');if(!el)return;
+  el.innerHTML='<option value="">選擇人員</option>'+Object.values(DB.persons).map(p=>`<option value="${p.id}">${p.name}</option>`).join('');
+}
+window.addUsage = async function(){
+  const combo=document.getElementById('u-combo').value;
+  if(!combo){alert('請選擇油漆品項');return;}
+  const[pid,sz]=combo.split('_');
+  const qty=parseInt(document.getElementById('u-qty').value)||0;
+  const job=document.getElementById('u-job').value.trim();
+  const perid=document.getElementById('u-per').value;
+  const note=document.getElementById('u-note').value.trim();
+  if(qty<1){alert('桶數需大於0');return;}
+  if(!job){alert('請填寫工作件號');return;}
+  const cur=gstock(pid,sz);
+  if(qty>cur){alert(`庫存不足！現有${cur}桶`);return;}
+  const p=DB.paints[pid]||{name:'?',brand:''};
+  const per=DB.persons[perid]||{name:'-'};
+  const id=uid();
+  const stockKey=pid+'_'+sz;
+  setDot('spin','更新中...');
+  try {
+    await Promise.all([
+      fsSet('usages',id,{id,pid,sz,qty,job,perid,note,ts:new Date().toISOString(),date:today(),pname:p.name,brand:p.brand,pername:per.name}),
+      fsSet('stock',stockKey,{key:stockKey,qty:cur-qty})
+    ]);
+    document.getElementById('u-qty').value=1;
+    document.getElementById('u-job').value='';
+    document.getElementById('u-note').value='';
+    await loadAll();
+    const warns=getWarnItems();
+    if(warns.length) alert(`出庫成功！\n\n⚠️ 警戒：${warns.map(w=>w.paint.name+' '+SZ[w.sz]+' 剩'+w.q+'桶').join('、')}`);
+    else alert(`出庫成功！${p.name} ${SZ[sz]} ${qty}桶已扣除。`);
+  } catch(e){ setDot('err','出庫失敗'); }
+};
+window.renderUsage = function(){
+  const tb=document.getElementById('usage-tbody');
+  const usages=Object.values(DB.usages);
+  if(!usages.length){tb.innerHTML='<tr><td colspan="6" class="empty">尚無出庫記錄</td></tr>';return;}
+  tb.innerHTML=usages.sort((a,b)=>b.ts>a.ts?1:-1).map(u=>`<tr>
+    <td style="font-size:11px">${u.date}</td>
+    <td>${u.pname} <span style="font-size:10px;color:var(--text2)">${SZ[u.sz]||u.sz}</span></td>
+    <td>${u.qty}</td><td>${u.job}</td><td>${u.pername}</td>
+    <td style="font-size:11px;color:var(--text2)">${u.note||'-'}</td>
+  </tr>`).join('');
+};
+
+// ── 設定 ──
+window.addPaint = async function(){
+  const name=document.getElementById('pn-name').value.trim();
+  const brand=document.getElementById('pn-brand').value.trim();
+  const p1=parseFloat(document.getElementById('pn-p1').value)||0;
+  const p3=parseFloat(document.getElementById('pn-p3').value)||0;
+  const p5=parseFloat(document.getElementById('pn-p5').value)||0;
+  const alertV=parseInt(document.getElementById('pn-alert').value)||0;
+  if(!name){alert('請填寫品項名稱');return;}
+  const id=uid();
+  setDot('spin','儲存中...');
+  try {
+    await fsSet('paints',id,{id,name,brand,prices:{'1G':p1,'3G':p3,'5G':p5},alert:alertV});
+    ['pn-name','pn-brand','pn-p1','pn-p3','pn-p5'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('pn-alert').value=5;
+    await loadAll();
+  } catch(e){ setDot('err','新增失敗'); }
+};
+window.editPaint = function(id){
+  const p=DB.paints[id];
+  document.getElementById('ep-id').value=id;
+  document.getElementById('ep-name').value=p.name||'';
+  document.getElementById('ep-brand').value=p.brand||'';
+  document.getElementById('ep-p1').value=p.prices?.['1G']||'';
+  document.getElementById('ep-p3').value=p.prices?.['3G']||'';
+  document.getElementById('ep-p5').value=p.prices?.['5G']||'';
+  document.getElementById('ep-alert').value=p.alert||0;
+  document.getElementById('edit-paint-overlay').classList.add('open');
+};
+window.saveEditPaint = async function(){
+  const id=document.getElementById('ep-id').value;
+  const p=DB.paints[id];
+  const name=document.getElementById('ep-name').value.trim();
+  const brand=document.getElementById('ep-brand').value.trim();
+  const p1=parseFloat(document.getElementById('ep-p1').value)||0;
+  const p3=parseFloat(document.getElementById('ep-p3').value)||0;
+  const p5=parseFloat(document.getElementById('ep-p5').value)||0;
+  const alertV=parseInt(document.getElementById('ep-alert').value)||0;
+  if(!name){alert('請填寫品項名稱');return;}
+  setDot('spin','儲存中...');
+  try {
+    await fsSet('paints',id,{...p,name,brand,prices:{'1G':p1,'3G':p3,'5G':p5},alert:alertV});
+    closeModal('edit-paint-overlay');
+    await loadAll();
+  } catch(e){ setDot('err','儲存失敗'); }
+};
+window.deletePaint = async function(id){
+  if(!confirm('確定刪除此品項?'))return;
+  setDot('spin','刪除中...');
+  try { await fsDel('paints',id); await loadAll(); }
+  catch(e){ setDot('err','刪除失敗'); }
+};
+window.addPerson = async function(){
+  const name=document.getElementById('per-name').value.trim();
+  const dept=document.getElementById('per-dept').value.trim();
+  if(!name){alert('請填寫姓名');return;}
+  const id=uid();
+  setDot('spin','儲存中...');
+  try {
+    await fsSet('persons',id,{id,name,dept});
+    document.getElementById('per-name').value='';
+    document.getElementById('per-dept').value='';
+    await loadAll();
+  } catch(e){ setDot('err','新增失敗'); }
+};
+window.editPerson = function(id){
+  const p=DB.persons[id];
+  document.getElementById('eper-id').value=id;
+  document.getElementById('eper-name').value=p.name||'';
+  document.getElementById('eper-dept').value=p.dept||'';
+  document.getElementById('edit-person-overlay').classList.add('open');
+};
+window.saveEditPerson = async function(){
+  const id=document.getElementById('eper-id').value;
+  const p=DB.persons[id];
+  const name=document.getElementById('eper-name').value.trim();
+  const dept=document.getElementById('eper-dept').value.trim();
+  if(!name){alert('請填寫姓名');return;}
+  setDot('spin','儲存中...');
+  try {
+    await fsSet('persons',id,{...p,name,dept});
+    closeModal('edit-person-overlay');
+    await loadAll();
+  } catch(e){ setDot('err','儲存失敗'); }
+};
+window.deletePerson = async function(id){
+  if(!confirm('確定刪除?'))return;
+  setDot('spin','刪除中...');
+  try { await fsDel('persons',id); await loadAll(); }
+  catch(e){ setDot('err','刪除失敗'); }
+};
+window.renderSettings = function(){
+  const pl=document.getElementById('paint-list');
+  const paints=Object.values(DB.paints);
+  if(!paints.length){pl.innerHTML='<div class="empty">尚未新增品項</div>';}
+  else pl.innerHTML=paints.map(p=>{
+    const prItems=['1G','3G','5G'].filter(sz=>p.prices&&parseFloat(p.prices[sz])>0)
+      .map(sz=>`<span class="pp">${SZ[sz]}：<b>$${parseFloat(p.prices[sz]).toLocaleString()}</b></span>`).join('');
+    return `<div class="paint-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start">
+        <div><span style="font-weight:500">${p.name}</span> <span style="font-size:12px;color:var(--text2)">${p.brand}</span></div>
+        <div style="display:flex;gap:6px;flex-shrink:0;margin-left:8px">
+          <button class="btn sm" onclick="editPaint('${p.id}')">編輯</button>
+          <button class="btn sm del" onclick="deletePaint('${p.id}')">刪除</button>
+        </div>
+      </div>
+      <div class="paint-prices">${prItems||'<span style="font-size:12px;color:var(--text3)">未設定單價</span>'}</div>
+      <div style="font-size:12px;color:var(--text2);margin-top:4px">警戒：${p.alert||0}桶</div>
+    </div>`;
+  }).join('');
+  const pl2=document.getElementById('person-list');
+  const persons=Object.values(DB.persons);
+  if(!persons.length){pl2.innerHTML='<div class="empty">尚未新增人員</div>';}
+  else pl2.innerHTML=persons.map(p=>`
+    <div class="srow">
+      <div><span style="font-weight:500">${p.name}</span> <span style="font-size:12px;color:var(--text2)">${p.dept}</span></div>
+      <div style="display:flex;gap:6px">
+        <button class="btn sm" onclick="editPerson('${p.id}')">編輯</button>
+        <button class="btn sm del" onclick="deletePerson('${p.id}')">刪除</button>
+      </div>
+    </div>`).join('');
+};
+
+document.getElementById('o-date').value=new Date().toISOString().slice(0,10);
+loadAll();
+</script>
+</body>
+</html>
