@@ -6,256 +6,154 @@
 <title>油漆庫存</title>
 <style>
   :root {
-    --bg: #F4F6F9;
-    --surface: #FFFFFF;
-    --surface2: #F0F2F5;
-    --primary: #4A90D9;
-    --primary-light: #EAF3FB;
-    --success: #4CAF82;
-    --danger: #E05252;
-    --danger-light: #FDEAEA;
-    --warn: #F08C30;
-    --warn-light: #FEF3E6;
-    --text: #2C3347;
-    --text-sub: #6B7280;
-    --border: #E4E8EE;
-    --radius: 14px;
-    --radius-sm: 8px;
-    --shadow: 0 2px 10px rgba(0,0,0,0.07);
+    --bg:#F4F6F9; --surface:#fff; --surface2:#F0F2F5;
+    --primary:#4A90D9; --primary-light:#EAF3FB;
+    --success:#4CAF82; --danger:#E05252; --danger-light:#FDEAEA;
+    --warn:#F08C30; --warn-light:#FEF3E6;
+    --text:#2C3347; --text-sub:#6B7280; --border:#E4E8EE;
+    --radius:14px; --radius-sm:8px; --shadow:0 2px 10px rgba(0,0,0,.07);
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    font-family: -apple-system, "Helvetica Neue", Arial, "Noto Sans TC", sans-serif;
-    background: var(--bg); color: var(--text);
-    min-height: 100vh; padding-bottom: 40px;
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:-apple-system,"Helvetica Neue",Arial,"Noto Sans TC",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;padding-bottom:40px;}
 
-  /* TOP BAR */
-  .top-bar {
-    background: var(--surface); padding: 14px 16px 0;
-    position: sticky; top: 0; z-index: 100;
-    box-shadow: 0 1px 6px rgba(0,0,0,0.07);
-  }
-  .top-bar h1 { font-size: 18px; font-weight: 700; }
-  .top-bar p  { font-size: 11px; color: var(--text-sub); margin-top: 1px; }
-  .tab-bar {
-    display: flex; gap: 4px; overflow-x: auto;
-    padding: 10px 0 0; scrollbar-width: none;
-  }
-  .tab-bar::-webkit-scrollbar { display: none; }
-  .tab-btn {
-    flex-shrink: 0; padding: 7px 15px;
-    border: 1.5px solid var(--border); border-bottom: none;
-    border-radius: 8px 8px 0 0;
-    font-family: inherit; font-size: 13px; font-weight: 500;
-    cursor: pointer; background: var(--surface2); color: var(--text-sub);
-    transition: all .15s;
-  }
-  .tab-btn.active { background: var(--surface); color: var(--primary); font-weight: 700; }
+  .top-bar{background:var(--surface);padding:14px 16px 0;position:sticky;top:0;z-index:100;box-shadow:0 1px 6px rgba(0,0,0,.07);}
+  .top-bar h1{font-size:18px;font-weight:700;}
+  .top-bar p{font-size:11px;color:var(--text-sub);margin-top:1px;}
+  .tab-bar{display:flex;gap:4px;overflow-x:auto;padding:10px 0 0;scrollbar-width:none;}
+  .tab-bar::-webkit-scrollbar{display:none;}
+  .tab-btn{flex-shrink:0;padding:7px 15px;border:1.5px solid var(--border);border-bottom:none;border-radius:8px 8px 0 0;font-family:inherit;font-size:13px;font-weight:500;cursor:pointer;background:var(--surface2);color:var(--text-sub);}
+  .tab-btn.active{background:var(--surface);color:var(--primary);font-weight:700;}
 
-  /* PAGES */
-  .page { display: none; padding: 16px; }
-  .page.active { display: block; }
+  .page{display:none;padding:16px;}
+  .page.active{display:block;}
 
-  /* CARD */
-  .card { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow); padding: 16px; margin-bottom: 12px; }
-  .card-title { font-size: 14px; font-weight: 700; margin-bottom: 12px; }
+  .card{background:var(--surface);border-radius:var(--radius);box-shadow:var(--shadow);padding:16px;margin-bottom:12px;}
+  .card-title{font-size:15px;font-weight:700;margin-bottom:14px;}
 
-  /* FORM */
-  .form-row { margin-bottom: 10px; }
-  .form-2col { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-  label { font-size: 12px; font-weight: 500; color: var(--text-sub); display: block; margin-bottom: 4px; }
-  input, select {
-    width: 100%; padding: 10px 12px;
-    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    font-family: inherit; font-size: 15px; color: var(--text);
-    background: var(--surface2); outline: none; transition: border .15s;
-  }
-  input:focus, select:focus { border-color: var(--primary); background: #fff; }
+  .form-row{margin-bottom:10px;}
+  .form-2col{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;}
+  .form-2col-end{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;align-items:flex-end;}
+  label{font-size:12px;font-weight:500;color:var(--text-sub);display:block;margin-bottom:4px;}
+  input,select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-family:inherit;font-size:15px;color:var(--text);background:var(--surface2);outline:none;transition:border .15s;}
+  input:focus,select:focus{border-color:var(--primary);background:#fff;}
 
-  /* GALLON PRICE BOX */
-  .gallon-box {
-    border: 1.5px solid var(--border); border-radius: var(--radius-sm);
-    overflow: hidden; margin-bottom: 10px;
-  }
-  .gallon-box-title {
-    background: var(--surface2); padding: 8px 12px;
-    font-size: 12px; font-weight: 600; color: var(--text-sub);
-    border-bottom: 1px solid var(--border);
-  }
-  .gallon-row {
-    display: grid; grid-template-columns: 70px 1fr 1fr 1fr;
-    align-items: center; gap: 8px;
-    padding: 10px 12px; border-bottom: 1px solid var(--border);
-  }
-  .gallon-row:last-child { border-bottom: none; }
-  .gallon-row .gl-label { font-size: 14px; font-weight: 700; color: var(--text); }
-  .gallon-row input { margin: 0; }
-
-  /* BUTTONS */
-  .btn {
-    display: inline-flex; align-items: center; justify-content: center;
-    padding: 11px 20px; border: none; border-radius: 8px;
-    font-family: inherit; font-size: 14px; font-weight: 600;
-    cursor: pointer; transition: opacity .15s;
-  }
-  .btn:active { opacity: .8; }
-  .btn-primary { background: var(--primary); color: #fff; }
-  .btn-success { background: var(--success); color: #fff; }
-  .btn-danger  { background: var(--danger);  color: #fff; }
-  .btn-ghost   { background: var(--surface2); color: var(--text); border: 1.5px solid var(--border); }
-  .btn-sm { padding: 5px 12px; font-size: 12px; }
-  .btn-full { width: 100%; }
+  .btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 20px;border:none;border-radius:8px;font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:opacity .15s;}
+  .btn:active{opacity:.8;}
+  .btn-primary{background:var(--primary);color:#fff;}
+  .btn-success{background:var(--success);color:#fff;}
+  .btn-danger{background:var(--danger);color:#fff;}
+  .btn-ghost{background:var(--surface2);color:var(--text);border:1.5px solid var(--border);}
+  .btn-warn{background:var(--warn);color:#fff;}
+  .btn-sm{padding:5px 12px;font-size:12px;}
+  .btn-full{width:100%;}
 
   /* SUMMARY */
-  .summary-row { display: flex; gap: 8px; margin-bottom: 14px; }
-  .summary-pill {
-    flex: 1; background: var(--surface); border-radius: var(--radius);
-    padding: 12px 8px; box-shadow: var(--shadow); text-align: center;
-    border: 1.5px solid var(--border);
-  }
-  .summary-pill .sp-val { font-size: 24px; font-weight: 700; color: var(--primary); }
-  .summary-pill .sp-label { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
-  .summary-pill.warn .sp-val { color: var(--warn); }
-  .summary-pill.crit .sp-val { color: var(--danger); }
+  .summary-row{display:flex;gap:8px;margin-bottom:16px;}
+  .summary-pill{flex:1;background:var(--surface);border-radius:var(--radius);padding:12px 8px;box-shadow:var(--shadow);text-align:center;border:1.5px solid var(--border);}
+  .summary-pill .sp-val{font-size:26px;font-weight:700;color:var(--primary);}
+  .summary-pill .sp-label{font-size:11px;color:var(--text-sub);margin-top:2px;}
+  .summary-pill.warn .sp-val{color:var(--warn);}
+  .summary-pill.crit .sp-val{color:var(--danger);}
 
-  /* INVENTORY */
-  .inv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 4px; }
-  .inv-item {
-    border-radius: var(--radius); padding: 12px; box-shadow: var(--shadow);
-    position: relative; border: 1.5px solid var(--border); background: var(--surface);
-  }
-  .inv-item.low      { background: var(--warn-light);   border-color: #F0A040; }
-  .inv-item.critical { background: var(--danger-light); border-color: #E06060; }
-  .inv-badge {
-    position: absolute; top: 7px; right: 7px;
-    font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; color: #fff;
-  }
-  .inv-badge.low  { background: var(--warn); }
-  .inv-badge.crit { background: var(--danger); }
-  .item-cat  { font-size: 10px; color: var(--text-sub); margin-bottom: 3px; }
-  .item-name { font-size: 14px; font-weight: 700; line-height: 1.2; margin-bottom: 6px; }
-  .item-brand { font-size: 11px; color: var(--text-sub); margin-bottom: 8px; }
+  /* CATEGORY SECTION */
+  .cat-section{margin-bottom:16px;}
+  .cat-header{font-size:14px;font-weight:700;color:#fff;background:var(--text);padding:9px 16px;border-radius:10px 10px 0 0;}
+  .cat-body{background:var(--surface);border:1.5px solid var(--border);border-top:none;border-radius:0 0 10px 10px;overflow:hidden;}
 
-  /* per-gallon qty display */
-  .gallon-qtys { display: flex; flex-direction: column; gap: 4px; margin-bottom: 8px; }
-  .gq-row {
-    display: flex; align-items: center; justify-content: space-between;
-    font-size: 13px;
-  }
-  .gq-label { color: var(--text-sub); font-size: 12px; }
-  .gq-val   { font-weight: 700; color: var(--primary); font-size: 16px; }
-  .gq-val span { font-size: 11px; font-weight: 400; color: var(--text-sub); }
-  .item-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+  /* INV ITEM - single column */
+  .inv-item{padding:16px;border-bottom:1.5px solid var(--border);position:relative;}
+  .inv-item:last-child{border-bottom:none;}
+  .inv-item.low{background:var(--warn-light);}
+  .inv-item.critical{background:var(--danger-light);}
+  .inv-badge{position:absolute;top:14px;right:14px;font-size:11px;font-weight:700;padding:3px 8px;border-radius:4px;color:#fff;}
+  .inv-badge.low{background:var(--warn);}
+  .inv-badge.crit{background:var(--danger);}
+  .item-brand{font-size:12px;color:var(--text-sub);margin-bottom:4px;}
+  .item-name{font-size:18px;font-weight:700;line-height:1.2;margin-bottom:10px;padding-right:60px;}
 
-  .cat-header {
-    font-size: 12px; font-weight: 700; color: var(--text-sub);
-    letter-spacing: .8px; padding: 12px 2px 5px;
-    border-bottom: 1px solid var(--border); margin-bottom: 8px;
-  }
+  /* gallon rows */
+  .gallon-qtys{display:flex;flex-direction:column;gap:6px;}
+  .gq-row{display:flex;align-items:center;justify-content:space-between;padding:6px 10px;background:rgba(0,0,0,.03);border-radius:6px;}
+  .gq-label{font-size:14px;color:var(--text-sub);}
+  .gq-val{font-size:32px;font-weight:700;color:var(--primary);line-height:1;}
+  .gq-val span{font-size:14px;font-weight:400;color:var(--text-sub);}
+  .gq-low .gq-val{color:var(--warn);}
+  .gq-crit .gq-val{color:var(--danger);}
 
-  /* ORDER DRAFT TABLE */
-  .draft-wrap { display: none; }
-  .order-draft-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 10px; }
-  .order-draft-table th {
-    background: var(--text); color: #fff; padding: 8px 10px;
-    text-align: left; font-size: 12px; font-weight: 600;
-  }
-  .order-draft-table th:first-child { border-radius: 6px 0 0 0; }
-  .order-draft-table th:last-child  { border-radius: 0 6px 0 0; text-align: center; }
-  .order-draft-table td { padding: 9px 10px; border-bottom: 1px solid var(--border); background: var(--surface); }
-  .order-draft-table tr:nth-child(even) td { background: var(--surface2); }
-  .order-draft-table tr:last-child td { border-bottom: none; }
-  .draft-btn-row { display: flex; gap: 8px; }
+  /* GALLON BOX (設定) */
+  .gallon-box{border:1.5px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;margin-bottom:10px;}
+  .gallon-box-title{background:var(--surface2);padding:8px 12px;font-size:12px;font-weight:600;color:var(--text-sub);border-bottom:1px solid var(--border);}
+  .gallon-row{display:grid;grid-template-columns:58px 1fr 1fr 1fr;align-items:center;gap:8px;padding:10px 12px;border-bottom:1px solid var(--border);}
+  .gallon-row:last-child{border-bottom:none;}
+  .gl-label{font-size:14px;font-weight:700;}
+
+  /* ORDER DRAFT */
+  .draft-wrap{display:none;}
+  .order-draft-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:10px;}
+  .order-draft-table th{background:var(--text);color:#fff;padding:8px 10px;text-align:left;font-size:12px;font-weight:600;}
+  .order-draft-table th:first-child{border-radius:6px 0 0 0;}
+  .order-draft-table th:last-child{border-radius:0 6px 0 0;text-align:center;}
+  .order-draft-table td{padding:9px 10px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .order-draft-table tr:nth-child(even) td{background:var(--surface2);}
+  .order-draft-table tr:last-child td{border-bottom:none;}
+  .draft-btn-row{display:flex;gap:8px;}
 
   /* ORDER LOG */
-  .order-group { margin-bottom: 14px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-  .order-group-header {
-    background: var(--text); color: #fff; padding: 9px 14px;
-    font-size: 13px; font-weight: 700;
-    display: flex; align-items: center; justify-content: space-between;
-  }
-  .order-group-header .order-no { font-size: 11px; font-weight: 400; opacity: .7; }
-  .order-group-body { border: 1px solid var(--border); border-top: none; }
-  .order-row {
-    padding: 10px 14px; display: flex; align-items: center; gap: 10px;
-    border-bottom: 1px solid var(--border); background: var(--surface); font-size: 13px;
-  }
-  .order-row:last-child { border-bottom: none; }
-  .order-row:nth-child(even) { background: var(--surface2); }
-  .or-main { flex: 1; }
-  .or-name { font-weight: 600; color: var(--text); }
-  .or-sub  { font-size: 11px; color: var(--text-sub); margin-top: 2px; }
-  .or-qty  { font-size: 14px; font-weight: 700; color: var(--primary); white-space: nowrap; }
+  .order-group{margin-bottom:14px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+  .order-group-header{background:var(--text);color:#fff;padding:9px 14px;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:space-between;}
+  .order-group-header .order-no{font-size:11px;font-weight:400;opacity:.7;}
+  .order-group-body{border:1px solid var(--border);border-top:none;}
+  .order-row{padding:10px 14px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border);background:var(--surface);font-size:13px;}
+  .order-row:last-child{border-bottom:none;}
+  .order-row:nth-child(even){background:var(--surface2);}
+  .or-main{flex:1;}
+  .or-name{font-weight:600;}
+  .or-sub{font-size:11px;color:var(--text-sub);margin-top:2px;}
+  .or-qty{font-size:14px;font-weight:700;color:var(--primary);white-space:nowrap;}
 
   /* CHECK */
-  .check-group { margin-bottom: 12px; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow); }
-  .check-group-header { padding: 9px 14px; background: var(--text); color: #fff; font-size: 12px; font-weight: 700; }
-  .check-thead {
-    display: grid; grid-template-columns: 1fr 55px 65px 55px;
-    gap: 4px; align-items: center;
-    padding: 7px 14px; background: var(--surface2);
-    border-bottom: 1px solid var(--border);
-    font-size: 11px; font-weight: 600; color: var(--text-sub);
-  }
-  .check-row {
-    display: grid; grid-template-columns: 1fr 55px 65px 55px;
-    gap: 4px; align-items: center;
-    padding: 8px 14px; background: var(--surface);
-    border-bottom: 1px solid var(--border); font-size: 12px;
-  }
-  .check-row:last-child { border-bottom: none; }
-  .check-row:nth-child(odd) { background: #FAFBFD; }
-  .check-row input[type=number] { padding: 5px 6px; font-size: 13px; text-align: center; }
-  .cc { text-align: center; }
-  .diff-pos  { color: var(--success); font-weight: 700; }
-  .diff-neg  { color: var(--danger);  font-weight: 700; }
-  .diff-zero { color: var(--text-sub); }
+  .check-group{margin-bottom:12px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
+  .check-group-header{padding:9px 14px;background:var(--text);color:#fff;font-size:13px;font-weight:700;}
+  .check-thead{display:grid;grid-template-columns:1fr 55px 65px 55px;gap:4px;align-items:center;padding:7px 14px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text-sub);}
+  .check-row{display:grid;grid-template-columns:1fr 55px 65px 55px;gap:4px;align-items:center;padding:9px 14px;background:var(--surface);border-bottom:1px solid var(--border);font-size:13px;}
+  .check-row:last-child{border-bottom:none;}
+  .check-row:nth-child(odd){background:#FAFBFD;}
+  .check-row input[type=number]{padding:5px 6px;font-size:14px;text-align:center;}
+  .cc{text-align:center;}
+  .diff-pos{color:var(--success);font-weight:700;}
+  .diff-neg{color:var(--danger);font-weight:700;}
+  .diff-zero{color:var(--text-sub);}
 
-  /* OUT */
-  #outInfo {
-    background: var(--primary-light); border-radius: 8px;
-    padding: 10px 14px; margin-bottom: 10px; display: none;
-  }
-  .oi-label { font-size: 12px; color: var(--text-sub); margin-bottom: 4px; }
-  .oi-gallon-row { display: flex; gap: 12px; }
-  .oi-g { text-align: center; }
-  .oi-g .oi-gval { font-size: 22px; font-weight: 700; color: var(--primary); }
-  .oi-g .oi-glabel { font-size: 11px; color: var(--text-sub); }
+  /* OUT INFO */
+  #outInfo{background:var(--primary-light);border-radius:8px;padding:12px 14px;margin-bottom:10px;display:none;}
+  .oi-label{font-size:12px;color:var(--text-sub);margin-bottom:6px;}
+  .oi-gallon-row{display:flex;gap:20px;}
+  .oi-g{text-align:center;}
+  .oi-gval{font-size:28px;font-weight:700;color:var(--primary);line-height:1;}
+  .oi-glabel{font-size:12px;color:var(--text-sub);margin-top:2px;}
 
-  .out-row { padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--surface); font-size: 13px; }
-  .out-row:last-child { border-bottom: none; }
-  .out-row:nth-child(even) { background: var(--surface2); }
-  .out-row .out-main { font-weight: 600; margin-bottom: 3px; }
-  .out-row .out-sub  { font-size: 11px; color: var(--text-sub); }
+  .out-row{padding:10px 14px;border-bottom:1px solid var(--border);background:var(--surface);font-size:13px;}
+  .out-row:last-child{border-bottom:none;}
+  .out-row:nth-child(even){background:var(--surface2);}
+  .out-row .out-main{font-weight:600;margin-bottom:3px;}
+  .out-row .out-sub{font-size:11px;color:var(--text-sub);}
 
-  /* STAFF */
-  .staff-list { border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
-  .staff-item {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 10px 14px; border-bottom: 1px solid var(--border);
-    font-size: 14px; font-weight: 500; background: var(--surface);
-  }
-  .staff-item:last-child { border-bottom: none; }
+  /* MANAGE LIST */
+  .manage-list{border:1.5px solid var(--border);border-radius:8px;overflow:hidden;margin-top:8px;}
+  .manage-item{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:1px solid var(--border);font-size:14px;font-weight:500;background:var(--surface);}
+  .manage-item:last-child{border-bottom:none;}
 
-  #addCatPreview {
-    background: var(--primary-light); border-radius: 8px;
-    padding: 8px 12px; margin-bottom: 10px; display: none;
-    font-size: 13px; color: var(--primary); font-weight: 500;
-  }
+  /* EDIT MODAL */
+  .modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:500;align-items:flex-end;}
+  .modal-bg.open{display:flex;}
+  .modal-sheet{background:var(--surface);width:100%;border-radius:20px 20px 0 0;padding:20px;max-height:90vh;overflow-y:auto;}
+  .modal-handle{width:40px;height:4px;background:var(--border);border-radius:2px;margin:0 auto 16px;}
+  .modal-title{font-size:16px;font-weight:700;margin-bottom:16px;}
 
-  #toast {
-    position: fixed; bottom: 30px; left: 50%;
-    transform: translateX(-50%) translateY(10px);
-    background: #2C3347; color: #fff; padding: 10px 22px;
-    border-radius: 8px; font-size: 13px; font-weight: 500;
-    opacity: 0; pointer-events: none; transition: all .25s; z-index: 9999;
-    white-space: nowrap;
-  }
-  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+  #toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(10px);background:#2C3347;color:#fff;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:all .25s;z-index:9999;white-space:nowrap;}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 
-  .empty-state { text-align: center; padding: 36px 20px; color: var(--text-sub); font-size: 13px; }
-  @media (max-width: 340px) { .inv-grid { grid-template-columns: 1fr; } }
+  .empty-state{text-align:center;padding:36px 20px;color:var(--text-sub);font-size:13px;}
 </style>
 </head>
 <body>
@@ -273,32 +171,28 @@
   </div>
 </div>
 
-<!-- ═══ 庫存 ═══ -->
+<!-- 庫存 -->
 <div id="page-inv" class="page active">
   <div class="summary-row" id="summaryRow"></div>
   <div id="invContent"></div>
 </div>
 
-<!-- ═══ 叫貨 ═══ -->
+<!-- 叫貨 -->
 <div id="page-order" class="page">
   <div class="card">
     <div class="card-title">新增叫貨品項</div>
     <div class="form-row">
       <label>品項</label>
-      <select id="orderItem" onchange="buildGallonSelect()">
-        <option value="">-- 請選擇品項 --</option>
-      </select>
+      <select id="orderItem" onchange="buildOrderGallonSel()"><option value="">-- 請選擇品項 --</option></select>
     </div>
     <div class="form-2col">
       <div>
         <label>加侖規格</label>
-        <select id="orderGallon">
-          <option value="">-- 請先選品項 --</option>
-        </select>
+        <select id="orderGallon"><option value="">-- 請先選品項 --</option></select>
       </div>
       <div>
         <label>數量（桶）</label>
-        <input type="number" id="orderQty" min="1" placeholder="數量">
+        <input type="number" id="orderQty" min="1" placeholder="桶數">
       </div>
     </div>
     <div class="form-row">
@@ -307,25 +201,14 @@
     </div>
     <button class="btn btn-primary btn-full" onclick="addOrderDraft()">加入叫貨清單</button>
   </div>
-
-  <!-- 叫貨清單（截圖區） -->
   <div class="draft-wrap" id="draftWrap">
-    <div class="card" id="draftCard">
+    <div class="card">
       <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px;">
         <div class="card-title" style="margin:0;">叫貨清單</div>
         <div style="font-size:11px;color:var(--text-sub);" id="draftDate"></div>
       </div>
       <table class="order-draft-table">
-        <thead>
-          <tr>
-            <th>品名</th>
-            <th>廠牌</th>
-            <th>規格</th>
-            <th>數量</th>
-            <th>備註</th>
-            <th style="text-align:center;">刪</th>
-          </tr>
-        </thead>
+        <thead><tr><th>品名</th><th>廠牌</th><th>規格</th><th>數量</th><th>備註</th><th style="text-align:center;">刪</th></tr></thead>
         <tbody id="draftBody"></tbody>
       </table>
     </div>
@@ -336,7 +219,7 @@
   </div>
 </div>
 
-<!-- ═══ 點貨 ═══ -->
+<!-- 點貨 -->
 <div id="page-check" class="page">
   <div class="card">
     <div class="card-title">點貨清查</div>
@@ -346,24 +229,23 @@
   <div id="checkContent"></div>
 </div>
 
-<!-- ═══ 出庫 ═══ -->
+<!-- 出庫 -->
 <div id="page-out" class="page">
   <div class="card">
     <div class="card-title">出庫登記</div>
     <div class="form-row">
       <label>品項</label>
-      <select id="outItem" onchange="buildOutGallonSelect()">
-        <option value="">-- 請選擇 --</option>
-      </select>
+      <select id="outItem" onchange="buildOutGallonSel()"><option value="">-- 請選擇品項 --</option></select>
     </div>
     <div class="form-2col">
       <div>
         <label>加侖規格</label>
-        <select id="outGallon" onchange="fillOutInfo()">
-          <option value="">-- 請先選品項 --</option>
-        </select>
+        <select id="outGallon" onchange="fillOutInfo()"><option value="">-- 請先選品項 --</option></select>
       </div>
-      <div id="outQtyWrap"></div>
+      <div>
+        <label>出庫數量（桶）</label>
+        <input type="number" id="outQty" min="1" placeholder="桶數">
+      </div>
     </div>
     <div id="outInfo">
       <div class="oi-label">各規格現有庫存</div>
@@ -391,63 +273,128 @@
   </div>
 </div>
 
-<!-- ═══ 叫貨記錄 ═══ -->
+<!-- 叫貨記錄 -->
 <div id="page-orderlog" class="page">
   <div id="orderLogContent"></div>
 </div>
 
-<!-- ═══ 設定 ═══ -->
+<!-- 設定 -->
 <div id="page-add" class="page">
+
   <!-- 人員管理 -->
   <div class="card">
     <div class="card-title">人員管理</div>
-    <div class="form-2col" style="align-items:flex-end;">
-      <div>
-        <label>新增人員姓名</label>
-        <input type="text" id="newStaffName" placeholder="例：王大明">
-      </div>
+    <div class="form-2col-end">
+      <div><label>新增人員</label><input type="text" id="newStaffName" placeholder="姓名"></div>
       <button class="btn btn-primary btn-full" onclick="addStaff()">新增</button>
     </div>
-    <div id="staffListEl" class="staff-list"></div>
+    <div id="staffListEl" class="manage-list"></div>
+  </div>
+
+  <!-- 分類管理 -->
+  <div class="card">
+    <div class="card-title">分類管理</div>
+    <div class="form-2col-end">
+      <div><label>新增分類</label><input type="text" id="newCatName" placeholder="例：耐候漆"></div>
+      <button class="btn btn-primary btn-full" onclick="addCat()">新增</button>
+    </div>
+    <div id="catListEl" class="manage-list"></div>
+  </div>
+
+  <!-- 廠牌管理 -->
+  <div class="card">
+    <div class="card-title">廠牌管理</div>
+    <div class="form-2col-end">
+      <div><label>新增廠牌</label><input type="text" id="newBrandName" placeholder="例：永記"></div>
+      <button class="btn btn-primary btn-full" onclick="addBrand()">新增</button>
+    </div>
+    <div id="brandListEl" class="manage-list"></div>
   </div>
 
   <!-- 新增品項 -->
   <div class="card">
     <div class="card-title">新增油漆品項</div>
     <div class="form-2col">
-      <div>
-        <label>品項名稱</label>
-        <input type="text" id="addName" placeholder="如 水性白漆" oninput="previewCat(this.value)">
-      </div>
-      <div>
-        <label>廠牌 / 型號</label>
-        <input type="text" id="addBrand" placeholder="如 關西 K-100">
-      </div>
+      <div><label>品項名稱</label><input type="text" id="addName" placeholder="如 白 I-350 聚氨酯面漆"></div>
+      <div><label>廠牌</label><select id="addBrand"><option value="">-- 選廠牌 --</option></select></div>
     </div>
-    <div id="addCatPreview"></div>
-
+    <div class="form-row">
+      <label>分類</label>
+      <select id="addCat"><option value="">-- 選分類 --</option></select>
+    </div>
     <div class="gallon-box">
-      <div class="gallon-box-title">各尺寸現有庫存（桶）與單價（元/桶，不使用留空）</div>
+      <div class="gallon-box-title">各尺寸現有庫存（桶）、單價（元/桶）、警戒值（桶）— 不使用留空</div>
       <div class="gallon-row">
         <div class="gl-label">1 加侖</div>
-        <div><label>現有桶數</label><input type="number" id="add1qty" min="0" placeholder="0"></div>
+        <div><label>桶數</label><input type="number" id="add1qty" min="0" placeholder="0"></div>
         <div><label>單價</label><input type="number" id="add1price" min="0" placeholder="單價"></div>
-        <div><label>警戒值</label><input type="number" id="add1warn" min="0" placeholder="5"></div>
+        <div><label>警戒</label><input type="number" id="add1warn" min="0" placeholder="5"></div>
       </div>
       <div class="gallon-row">
         <div class="gl-label">3 加侖</div>
-        <div><label>現有桶數</label><input type="number" id="add3qty" min="0" placeholder="0"></div>
+        <div><label>桶數</label><input type="number" id="add3qty" min="0" placeholder="0"></div>
         <div><label>單價</label><input type="number" id="add3price" min="0" placeholder="單價"></div>
-        <div><label>警戒值</label><input type="number" id="add3warn" min="0" placeholder="5"></div>
+        <div><label>警戒</label><input type="number" id="add3warn" min="0" placeholder="5"></div>
       </div>
       <div class="gallon-row">
         <div class="gl-label">5 加侖</div>
-        <div><label>現有桶數</label><input type="number" id="add5qty" min="0" placeholder="0"></div>
+        <div><label>桶數</label><input type="number" id="add5qty" min="0" placeholder="0"></div>
         <div><label>單價</label><input type="number" id="add5price" min="0" placeholder="單價"></div>
-        <div><label>警戒值</label><input type="number" id="add5warn" min="0" placeholder="5"></div>
+        <div><label>警戒</label><input type="number" id="add5warn" min="0" placeholder="5"></div>
       </div>
     </div>
     <button class="btn btn-primary btn-full" onclick="submitAdd()">新增品項</button>
+  </div>
+
+  <!-- 品項列表 / 編輯 -->
+  <div class="card">
+    <div class="card-title">品項管理</div>
+    <div id="itemManageList"></div>
+  </div>
+</div>
+
+<!-- 編輯品項 Modal -->
+<div class="modal-bg" id="editModal">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">編輯品項</div>
+    <input type="hidden" id="editId">
+    <div class="form-2col">
+      <div><label>品項名稱</label><input type="text" id="editName"></div>
+      <div><label>廠牌</label><select id="editBrand"></select></div>
+    </div>
+    <div class="form-row">
+      <label>分類</label>
+      <select id="editCat"></select>
+    </div>
+    <div class="gallon-box">
+      <div class="gallon-box-title">各尺寸現有庫存（桶）、單價、警戒值</div>
+      <div class="gallon-row">
+        <div class="gl-label">1 加侖</div>
+        <div><label>桶數</label><input type="number" id="edit1qty" min="0"></div>
+        <div><label>單價</label><input type="number" id="edit1price" min="0"></div>
+        <div><label>警戒</label><input type="number" id="edit1warn" min="0"></div>
+      </div>
+      <div class="gallon-row">
+        <div class="gl-label">3 加侖</div>
+        <div><label>桶數</label><input type="number" id="edit3qty" min="0"></div>
+        <div><label>單價</label><input type="number" id="edit3price" min="0"></div>
+        <div><label>警戒</label><input type="number" id="edit3warn" min="0"></div>
+      </div>
+      <div class="gallon-row">
+        <div class="gl-label">5 加侖</div>
+        <div><label>桶數</label><input type="number" id="edit5qty" min="0"></div>
+        <div><label>單價</label><input type="number" id="edit5price" min="0"></div>
+        <div><label>警戒</label><input type="number" id="edit5warn" min="0"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-ghost" onclick="closeEdit()" style="flex:1;">取消</button>
+      <button class="btn btn-primary" onclick="saveEdit()" style="flex:2;">儲存</button>
+    </div>
+    <div style="margin-top:10px;">
+      <button class="btn btn-danger btn-full" onclick="deleteItem()">刪除此品項</button>
+    </div>
   </div>
 </div>
 
@@ -457,202 +404,182 @@
 <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
 <script>
 firebase.initializeApp({
-  apiKey: "AIzaSyBCSRwTMDf7oMh6tVYvgpfTIcJdm5F4pLU",
-  authDomain: "paint-inventory-fc3db.firebaseapp.com",
-  projectId: "paint-inventory-fc3db",
-  storageBucket: "paint-inventory-fc3db.appspot.com",
-  messagingSenderId: "580409447672",
-  appId: "1:580409447672:web:d626f89be5403be7dd170d"
+  apiKey:"AIzaSyBCSRwTMDf7oMh6tVYvgpfTIcJdm5F4pLU",
+  authDomain:"paint-inventory-fc3db.firebaseapp.com",
+  projectId:"paint-inventory-fc3db",
+  storageBucket:"paint-inventory-fc3db.appspot.com",
+  messagingSenderId:"580409447672",
+  appId:"1:580409447672:web:d626f89be5403be7dd170d"
 });
-var db = firebase.firestore();
+var db=firebase.firestore();
 
-var GALLONS = ['1','3','5'];
+var GALLONS=['1','3','5'];
 
-var CAT_RULES = [
-  { key:'topcoat', label:'面漆',   kw:['面漆','面油','topcoat','finish','亮光','平光'] },
-  { key:'primer',  label:'底漆',   kw:['底漆','底油','primer','打底','封底'] },
-  { key:'thinner', label:'調薄劑', kw:['調薄劑','稀釋劑','天拿水','thinner','溶劑','松香水'] },
-  { key:'putty',   label:'批土',   kw:['批土','填縫','putty','膩子'] },
-  { key:'sealer',  label:'防水漆', kw:['防水','sealer','waterproof','彈性'] },
-  { key:'other',   label:'其他',   kw:[] }
-];
-var CAT_ORDER = ['topcoat','primer','thinner','putty','sealer','other'];
-
-function detectCat(name) {
-  var n=(name||'').toLowerCase();
-  for(var i=0;i<CAT_RULES.length;i++){
-    var r=CAT_RULES[i];
-    for(var j=0;j<r.kw.length;j++){ if(n.indexOf(r.kw[j].toLowerCase())>=0) return r.key; }
-  }
-  return 'other';
-}
-function catLabel(k){
-  for(var i=0;i<CAT_RULES.length;i++){ if(CAT_RULES[i].key===k) return CAT_RULES[i].label; }
-  return '其他';
-}
-
-// 取某加侖的庫存 key: qty1, qty3, qty5
-function gKey(g,field){ return field+g; }
-// 取品項某加侖庫存
-function gQty(item,g){ return parseInt(item['qty'+g])||0; }
-// 取品項某加侖單價
-function gPrice(item,g){ return parseFloat(item['price'+g])||0; }
-// 取品項某加侖警戒值
-function gWarn(item,g){ return parseInt(item['warn'+g])||0; }
-// 品項是否有某加侖（有設定庫存或單價）
-function hasGallon(item,g){ return item['qty'+g]!==undefined||item['price'+g]!==undefined; }
-
-// 品項整體是否低庫存（任意加侖）
-function itemLowLevel(item){
-  var isCrit=false, isLow=false;
-  GALLONS.forEach(function(g){
-    var qty=gQty(item,g), warn=gWarn(item,g);
-    // 若都沒設定則跳過
-    if(!item['qty'+g]&&!item['warn'+g]) return;
-    if(warn>0 && qty<=Math.floor(warn*0.4)) isCrit=true;
-    else if(warn>0 && qty<=warn) isLow=true;
-  });
-  return isCrit?'critical':isLow?'low':'';
-}
-
-var items=[], orderLogs=[], outLogs=[], staffList=[];
+// ── 全域狀態 ──
+var items=[], orderLogs=[], outLogs=[];
+var staffList=[];
+var categories=['底漆','中塗漆','面漆','耐熱漆','調薄劑'];
+var brands=['柏林','永記'];
 var orderDraft=[], checkInputs={};
 
-function today(){ return new Date().toISOString().slice(0,10); }
+// ── 工具 ──
+function today(){return new Date().toISOString().slice(0,10);}
 function fmtDate(d){
-  if(!d) return '';
-  if(d&&typeof d.toDate==='function') d=d.toDate();
-  if(d instanceof Date) return d.toISOString().slice(0,10);
+  if(!d)return'';
+  if(d&&typeof d.toDate==='function')d=d.toDate();
+  if(d instanceof Date)return d.toISOString().slice(0,10);
   return String(d).slice(0,10);
 }
 function formatDateCN(s){
-  if(!s) return '';
-  var p=s.split('-');
+  if(!s)return'';var p=s.split('-');
   return p[0]+'年'+p[1]+'月'+p[2]+'日';
 }
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
 function showToast(msg){
   var t=document.getElementById('toast');
-  t.textContent=msg; t.classList.add('show');
-  setTimeout(function(){ t.classList.remove('show'); },2200);
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2200);
+}
+function gQty(item,g){return parseInt(item['qty'+g])||0;}
+function gPrice(item,g){return parseFloat(item['price'+g])||0;}
+function gWarn(item,g){return parseInt(item['warn'+g])||0;}
+function hasG(item,g){return item['qty'+g]!==undefined||item['price'+g]!==undefined||item['warn'+g]!==undefined;}
+
+function itemLevel(item){
+  var crit=false,low=false;
+  GALLONS.forEach(function(g){
+    if(!hasG(item,g))return;
+    var qty=gQty(item,g),warn=gWarn(item,g);
+    if(warn>0&&qty<=Math.max(1,Math.floor(warn*0.4)))crit=true;
+    else if(warn>0&&qty<=warn)low=true;
+  });
+  return crit?'critical':low?'low':'';
 }
 
 function sortItems(){
   items.sort(function(a,b){
-    var ci=CAT_ORDER.indexOf(a.category||'other');
-    var cj=CAT_ORDER.indexOf(b.category||'other');
-    if(ci<0) ci=CAT_ORDER.length; if(cj<0) cj=CAT_ORDER.length;
-    return ci-cj||(a.name||'').localeCompare(b.name||'');
+    var ai=categories.indexOf(a.category||'');
+    var bi=categories.indexOf(b.category||'');
+    if(ai<0)ai=999;if(bi<0)bi=999;
+    return ai-bi||(a.name||'').localeCompare(b.name||'');
   });
 }
 
+// ── LOAD ──
 function loadAll(){
   return Promise.all([
     db.collection('paintItems').get().then(function(s){
-      items=s.docs.map(function(d){ return Object.assign({id:d.id},d.data()); });
+      items=s.docs.map(function(d){return Object.assign({id:d.id},d.data());});
       sortItems();
     }),
     db.collection('orderLogs').get().then(function(s){
-      orderLogs=s.docs.map(function(d){ return Object.assign({id:d.id},d.data()); });
-      orderLogs.sort(function(a,b){ return fmtDate(b.date).localeCompare(fmtDate(a.date)); });
+      orderLogs=s.docs.map(function(d){return Object.assign({id:d.id},d.data());});
+      orderLogs.sort(function(a,b){return fmtDate(b.date).localeCompare(fmtDate(a.date));});
     }),
     db.collection('outLogs').get().then(function(s){
-      outLogs=s.docs.map(function(d){ return Object.assign({id:d.id},d.data()); });
+      outLogs=s.docs.map(function(d){return Object.assign({id:d.id},d.data());});
       outLogs.sort(function(a,b){
         var ta=a.createdAt&&a.createdAt.toDate?a.createdAt.toDate().getTime():0;
         var tb=b.createdAt&&b.createdAt.toDate?b.createdAt.toDate().getTime():0;
         return tb-ta;
       });
     }),
-    db.collection('settings').doc('staff').get().then(function(d){
-      staffList=d.exists?(d.data().list||[]):[];
+    db.collection('settings').doc('main').get().then(function(d){
+      if(d.exists){
+        var data=d.data();
+        if(data.staff)staffList=data.staff;
+        if(data.categories&&data.categories.length)categories=data.categories;
+        if(data.brands&&data.brands.length)brands=data.brands;
+      }
     })
   ]);
 }
 
-function switchTab(tab,btn){
-  document.querySelectorAll('.page').forEach(function(p){ p.classList.remove('active'); });
-  document.querySelectorAll('.tab-btn').forEach(function(b){ b.classList.remove('active'); });
-  document.getElementById('page-'+tab).classList.add('active');
-  if(btn) btn.classList.add('active');
-  if(tab==='inv')      renderInv();
-  if(tab==='out')      { buildOutItemSelect(); buildStaffSelect(); renderOutLog(); }
-  if(tab==='order')    buildOrderItemSelect();
-  if(tab==='orderlog') renderOrderLog();
-  if(tab==='check')    renderCheck();
-  if(tab==='add')      renderStaffList();
+function saveSettings(){
+  return db.collection('settings').doc('main').set({
+    staff:staffList,categories:categories,brands:brands
+  });
 }
 
-// ══════════════════════════════
-//  庫存
-// ══════════════════════════════
+// ── TABS ──
+function switchTab(tab,btn){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  document.getElementById('page-'+tab).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(tab==='inv')     renderInv();
+  if(tab==='out')     {buildOutItemSel();buildStaffSel();renderOutLog();}
+  if(tab==='order')   buildOrderItemSel();
+  if(tab==='orderlog')renderOrderLog();
+  if(tab==='check')   renderCheck();
+  if(tab==='add')     {renderStaffList();renderCatList();renderBrandList();renderItemManage();buildAddSelects();}
+}
+
+// ══════════════════════════════════════════
+// 庫存
+// ══════════════════════════════════════════
 function renderInv(){
-  var total=items.length, lowCnt=0, critCnt=0;
+  var total=items.length,lowCnt=0,critCnt=0;
   items.forEach(function(i){
-    var lv=itemLowLevel(i);
-    if(lv==='critical') critCnt++;
-    else if(lv==='low') lowCnt++;
+    var lv=itemLevel(i);
+    if(lv==='critical')critCnt++;
+    else if(lv==='low')lowCnt++;
   });
   document.getElementById('summaryRow').innerHTML=
     '<div class="summary-pill"><div class="sp-val">'+total+'</div><div class="sp-label">品項總數</div></div>'+
     '<div class="summary-pill warn"><div class="sp-val">'+lowCnt+'</div><div class="sp-label">低庫存</div></div>'+
     '<div class="summary-pill crit"><div class="sp-val">'+critCnt+'</div><div class="sp-label">極低庫存</div></div>';
 
+  // 依分類分組
   var groups={};
-  CAT_ORDER.forEach(function(c){ groups[c]=[]; });
+  var usedCats=[];
   items.forEach(function(item){
-    var cat=item.category||'other';
-    if(!groups[cat]) groups[cat]=[];
+    var cat=item.category||'其他';
+    if(!groups[cat]){groups[cat]=[];usedCats.push(cat);}
     groups[cat].push(item);
   });
+  // 依 categories 順序排列，再加上不在清單的
+  var orderedCats=[];
+  categories.forEach(function(c){if(groups[c])orderedCats.push(c);});
+  usedCats.forEach(function(c){if(orderedCats.indexOf(c)<0)orderedCats.push(c);});
 
   var html='';
-  CAT_ORDER.forEach(function(cat){
-    if(!groups[cat].length) return;
-    html+='<div class="cat-header">'+catLabel(cat)+'</div><div class="inv-grid">';
+  orderedCats.forEach(function(cat){
+    if(!groups[cat]||!groups[cat].length)return;
+    html+='<div class="cat-section"><div class="cat-header">'+esc(cat)+'</div><div class="cat-body">';
     groups[cat].forEach(function(item){
-      var lv=itemLowLevel(item);
+      var lv=itemLevel(item);
       var badge=lv==='critical'?'<div class="inv-badge crit">極低</div>':lv==='low'?'<div class="inv-badge low">低</div>':'';
-
-      // 各加侖庫存行
       var gRows='';
       GALLONS.forEach(function(g){
-        // 若品項完全沒這個加侖的資料就跳過
-        if(item['qty'+g]===undefined && item['price'+g]===undefined && item['warn'+g]===undefined) return;
+        if(!hasG(item,g))return;
         var qty=gQty(item,g);
         var warn=gWarn(item,g);
-        var isCritG=warn>0&&qty<=Math.floor(warn*0.4);
-        var isLowG=!isCritG&&warn>0&&qty<=warn;
-        var color=isCritG?'var(--danger)':isLowG?'var(--warn)':'var(--primary)';
-        gRows+='<div class="gq-row">'
-          +'<span class="gq-label">'+g+' 加侖</span>'
-          +'<span class="gq-val" style="color:'+color+'">'+qty+'<span> 桶</span></span>'
-          +'</div>';
+        var gCrit=warn>0&&qty<=Math.max(1,Math.floor(warn*0.4));
+        var gLow=!gCrit&&warn>0&&qty<=warn;
+        var rowCls=gCrit?'gq-crit':gLow?'gq-low':'';
+        gRows+='<div class="gq-row '+rowCls+'"><span class="gq-label">'+g+' 加侖</span><span class="gq-val">'+qty+'<span> 桶</span></span></div>';
       });
+      // 舊格式相容
       if(!gRows){
-        // 舊格式相容（沒有分加侖的品項）
-        var qty=item.qty||0;
-        gRows='<div class="gq-row"><span class="gq-label">庫存</span>'
-          +'<span class="gq-val">'+qty+'<span> 桶</span></span></div>';
+        gRows='<div class="gq-row"><span class="gq-label">庫存</span><span class="gq-val">'+(item.qty||0)+'<span> 桶</span></span></div>';
       }
-
-      html+='<div class="inv-item '+lv+'">'+badge
-        +'<div class="item-cat">'+catLabel(item.category||'other')+'</div>'
-        +'<div class="item-name">'+esc(item.name||'未命名')+'</div>'
-        +(item.brand?'<div class="item-brand">'+esc(item.brand)+'</div>':'')
-        +'<div class="gallon-qtys">'+gRows+'</div>'
-        +'</div>';
+      html+='<div class="inv-item '+lv+'">'+badge+
+        '<div class="item-brand">'+esc(item.brand||'')+'</div>'+
+        '<div class="item-name">'+esc(item.name||'未命名')+'</div>'+
+        '<div class="gallon-qtys">'+gRows+'</div>'+
+        '</div>';
     });
-    html+='</div>';
+    html+='</div></div>';
   });
-  if(!items.length) html='<div class="empty-state">尚無品項，請至「設定」新增</div>';
+  if(!items.length)html='<div class="empty-state">尚無品項，請至「設定」新增</div>';
   document.getElementById('invContent').innerHTML=html;
 }
 
-// ══════════════════════════════
-//  叫貨
-// ══════════════════════════════
-function buildOrderItemSelect(){
+// ══════════════════════════════════════════
+// 叫貨
+// ══════════════════════════════════════════
+function buildOrderItemSel(){
   var sel=document.getElementById('orderItem');
   sel.innerHTML='<option value="">-- 請選擇品項 --</option>';
   items.forEach(function(item){
@@ -664,161 +591,97 @@ function buildOrderItemSelect(){
   document.getElementById('orderGallon').innerHTML='<option value="">-- 請先選品項 --</option>';
 }
 
-function buildOutGallonSelect(){
-  var itemId=document.getElementById('outItem').value;
-  var gSel=document.getElementById('outGallon');
-  gSel.innerHTML='';
-  document.getElementById('outInfo').style.display='none';
-  document.getElementById('outQtyWrap').innerHTML='';
-  if(!itemId){ gSel.innerHTML='<option value="">-- 請先選品項 --</option>'; return; }
-  var item=items.find(function(i){ return i.id===itemId; });
+function buildOrderGallonSel(){
+  var id=document.getElementById('orderItem').value;
+  var sel=document.getElementById('orderGallon');
+  sel.innerHTML='';
+  if(!id){sel.innerHTML='<option value="">-- 請先選品項 --</option>';return;}
+  var item=items.find(function(i){return i.id===id;});
   var added=0;
   GALLONS.forEach(function(g){
-    if(item['qty'+g]===undefined&&item['price'+g]===undefined&&item['warn'+g]===undefined) return;
-    var qty=gQty(item,g);
-    if(qty<=0) return; // 庫存0就不顯示
+    if(!hasG(item,g))return;
     var o=document.createElement('option');
     o.value=g;
-    o.textContent=g+' 加侖（現有 '+qty+' 桶）';
-    gSel.appendChild(o);
-    added++;
+    o.textContent=g+' 加侖（現有 '+gQty(item,g)+' 桶）';
+    sel.appendChild(o);added++;
   });
-  if(!added){
-    gSel.innerHTML='<option value="">庫存不足，無法出庫</option>';
-    return;
-  }
-  fillOutInfo();
-}
-
-function fillOutInfo(){
-  var itemId=document.getElementById('outItem').value;
-  var g=document.getElementById('outGallon').value;
-  var box=document.getElementById('outInfo');
-  var qtyWrap=document.getElementById('outQtyWrap');
-  if(!itemId||!g){ box.style.display='none'; qtyWrap.innerHTML=''; return; }
-  var item=items.find(function(i){ return i.id===itemId; });
-  var qty=gQty(item,g);
-
-  // 顯示現有庫存
-  document.getElementById('outInfoRow').innerHTML=
-    '<div class="oi-g"><div class="oi-gval">'+qty+'</div><div class="oi-glabel">'+g+' 加侖 現有</div></div>';
-  box.style.display='block';
-
-  // 數量選單：1 到 現有桶數
-  var opts='';
-  for(var i=1;i<=qty;i++) opts+='<option value="'+i+'">'+i+' 桶</option>';
-  qtyWrap.innerHTML='<div><label>出庫數量</label><select id="outQty">'+opts+'</select></div>';
+  if(!added){GALLONS.forEach(function(g){var o=document.createElement('option');o.value=g;o.textContent=g+' 加侖';sel.appendChild(o);});}
 }
 
 function addOrderDraft(){
-  var itemId=document.getElementById('orderItem').value;
+  var id=document.getElementById('orderItem').value;
   var g=document.getElementById('orderGallon').value;
   var qty=parseInt(document.getElementById('orderQty').value)||0;
   var note=document.getElementById('orderNote').value.trim();
-  if(!itemId||!g){ showToast('請選擇品項與規格'); return; }
-  if(qty<=0){ showToast('請輸入數量'); return; }
-  var item=items.find(function(i){ return i.id===itemId; });
-  orderDraft.push({
-    itemId:itemId,
-    name:item?item.name||'':'',
-    brand:item?item.brand||'':'',
-    gallon:g,
-    qty:qty,
-    note:note
-  });
+  if(!id||!g){showToast('請選擇品項與規格');return;}
+  if(qty<=0){showToast('請輸入數量');return;}
+  var item=items.find(function(i){return i.id===id;});
+  orderDraft.push({itemId:id,name:item?item.name||'':'',brand:item?item.brand||'':'',gallon:g,qty:qty,note:note});
   document.getElementById('orderQty').value='';
   document.getElementById('orderNote').value='';
-  renderDraft();
-  showToast('已加入叫貨清單');
+  renderDraft();showToast('已加入叫貨清單');
 }
 
 function renderDraft(){
   var wrap=document.getElementById('draftWrap');
-  if(!orderDraft.length){ wrap.style.display='none'; return; }
+  if(!orderDraft.length){wrap.style.display='none';return;}
   wrap.style.display='block';
   document.getElementById('draftDate').textContent=formatDateCN(today());
   document.getElementById('draftBody').innerHTML=orderDraft.map(function(r,i){
-    return '<tr>'
-      +'<td><strong>'+esc(r.name)+'</strong></td>'
-      +'<td>'+esc(r.brand)+'</td>'
-      +'<td>'+esc(r.gallon)+' 加侖</td>'
-      +'<td style="font-weight:700;color:var(--primary);">'+r.qty+' 桶</td>'
-      +'<td>'+esc(r.note)+'</td>'
-      +'<td style="text-align:center;"><button class="btn btn-danger btn-sm" onclick="removeDraft('+i+')">刪</button></td>'
-      +'</tr>';
+    return '<tr><td><strong>'+esc(r.name)+'</strong></td><td>'+esc(r.brand)+'</td><td>'+esc(r.gallon)+' 加侖</td>'+
+      '<td style="font-weight:700;color:var(--primary);">'+r.qty+' 桶</td><td>'+esc(r.note)+'</td>'+
+      '<td style="text-align:center;"><button class="btn btn-danger btn-sm" onclick="removeDraft('+i+')">刪</button></td></tr>';
   }).join('');
 }
 
-function removeDraft(i){ orderDraft.splice(i,1); renderDraft(); }
-function clearDraft(){ orderDraft=[]; renderDraft(); }
+function removeDraft(i){orderDraft.splice(i,1);renderDraft();}
+function clearDraft(){orderDraft=[];renderDraft();}
 
 function genOrderNo(date){
-  var cnt=orderLogs.filter(function(l){ return fmtDate(l.date)===date; }).length;
+  var cnt=orderLogs.filter(function(l){return fmtDate(l.date)===date;}).length;
   return cnt===0?date:date+'-'+cnt;
 }
 
 function submitDraft(){
-  if(!orderDraft.length){ showToast('叫貨清單是空的'); return; }
-  var date=today();
-  var orderNo=genOrderNo(date);
-  var promises=orderDraft.map(function(r){
-    var log={
-      itemId:r.itemId, itemName:r.name, brand:r.brand,
-      gallon:r.gallon, qty:r.qty, note:r.note,
-      date:date, orderNo:orderNo,
-      createdAt:firebase.firestore.FieldValue.serverTimestamp()
-    };
-    return db.collection('orderLogs').add(log).then(function(ref){
-      orderLogs.unshift(Object.assign({id:ref.id},log));
-    });
-  });
-  Promise.all(promises).then(function(){
+  if(!orderDraft.length){showToast('叫貨清單是空的');return;}
+  var date=today(),orderNo=genOrderNo(date);
+  Promise.all(orderDraft.map(function(r){
+    var log={itemId:r.itemId,itemName:r.name,brand:r.brand,gallon:r.gallon,qty:r.qty,note:r.note,date:date,orderNo:orderNo,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+    return db.collection('orderLogs').add(log).then(function(ref){orderLogs.unshift(Object.assign({id:ref.id},log));});
+  })).then(function(){
     showToast('叫貨已送出（單號：'+orderNo+'）');
-    orderDraft=[]; renderDraft();
+    orderDraft=[];renderDraft();
   });
 }
 
-// ══════════════════════════════
-//  叫貨記錄
-// ══════════════════════════════
+// ══════════════════════════════════════════
+// 叫貨記錄
+// ══════════════════════════════════════════
 function renderOrderLog(){
   var el=document.getElementById('orderLogContent');
-  if(!orderLogs.length){ el.innerHTML='<div class="empty-state">尚無叫貨記錄</div>'; return; }
+  if(!orderLogs.length){el.innerHTML='<div class="empty-state">尚無叫貨記錄</div>';return;}
   var byDate={};
-  orderLogs.forEach(function(l){
-    var d=fmtDate(l.date);
-    if(!byDate[d]) byDate[d]=[];
-    byDate[d].push(l);
-  });
-  var dates=Object.keys(byDate).sort(function(a,b){ return b.localeCompare(a); });
+  orderLogs.forEach(function(l){var d=fmtDate(l.date);if(!byDate[d])byDate[d]=[];byDate[d].push(l);});
+  var dates=Object.keys(byDate).sort(function(a,b){return b.localeCompare(a);});
   var html='';
   dates.forEach(function(d){
-    var logs=byDate[d];
-    var nos=[];
-    logs.forEach(function(l){ if(nos.indexOf(l.orderNo||d)<0) nos.push(l.orderNo||d); });
-    html+='<div class="order-group"><div class="order-group-header">'
-      +'<span>'+formatDateCN(d)+'</span>'
-      +'<span class="order-no">單號：'+nos.join('、')+'</span>'
-      +'</div><div class="order-group-body">';
+    var logs=byDate[d],nos=[];
+    logs.forEach(function(l){if(nos.indexOf(l.orderNo||d)<0)nos.push(l.orderNo||d);});
+    html+='<div class="order-group"><div class="order-group-header"><span>'+formatDateCN(d)+'</span><span class="order-no">單號：'+nos.join('、')+'</span></div><div class="order-group-body">';
     logs.forEach(function(l){
-      var galStr=l.gallon?l.gallon+' 加侖':'';
-      html+='<div class="order-row">'
-        +'<div class="or-main">'
-        +'<div class="or-name">'+esc(l.itemName||'')+(l.brand?' ('+esc(l.brand)+')':'')+'</div>'
-        +(l.note||galStr?'<div class="or-sub">'+(galStr?galStr:'')+(l.note?' · '+esc(l.note):'')+'</div>':'')
-        +'</div>'
-        +'<div class="or-qty">'+l.qty+' 桶</div>'
-        +'</div>';
+      html+='<div class="order-row"><div class="or-main"><div class="or-name">'+esc(l.itemName||'')+(l.brand?' ('+esc(l.brand)+')':'')+'</div>'+
+        (l.gallon||l.note?'<div class="or-sub">'+(l.gallon?l.gallon+' 加侖':'')+(l.note?' · '+esc(l.note):'')+'</div>':'')+'</div>'+
+        '<div class="or-qty">'+l.qty+' 桶</div></div>';
     });
     html+='</div></div>';
   });
   el.innerHTML=html;
 }
 
-// ══════════════════════════════
-//  出庫
-// ══════════════════════════════
-function buildOutItemSelect(){
+// ══════════════════════════════════════════
+// 出庫
+// ══════════════════════════════════════════
+function buildOutItemSel(){
   var sel=document.getElementById('outItem');
   sel.innerHTML='<option value="">-- 請選擇品項 --</option>';
   items.forEach(function(item){
@@ -831,86 +694,70 @@ function buildOutItemSelect(){
   document.getElementById('outInfo').style.display='none';
 }
 
-function buildOutGallonSelect(){
-  var itemId=document.getElementById('outItem').value;
-  var gSel=document.getElementById('outGallon');
-  gSel.innerHTML='';
+function buildOutGallonSel(){
+  var id=document.getElementById('outItem').value;
+  var sel=document.getElementById('outGallon');
+  sel.innerHTML='';
   document.getElementById('outInfo').style.display='none';
-  if(!itemId){ gSel.innerHTML='<option value="">-- 請先選品項 --</option>'; return; }
-  var item=items.find(function(i){ return i.id===itemId; });
+  if(!id){sel.innerHTML='<option value="">-- 請先選品項 --</option>';return;}
+  var item=items.find(function(i){return i.id===id;});
   var added=0;
   GALLONS.forEach(function(g){
-    if(item['qty'+g]===undefined&&item['price'+g]===undefined&&item['warn'+g]===undefined) return;
+    if(!hasG(item,g))return;
     var o=document.createElement('option');
-    o.value=g;
-    o.textContent=g+' 加侖';
-    gSel.appendChild(o);
-    added++;
+    o.value=g;o.textContent=g+' 加侖';
+    sel.appendChild(o);added++;
   });
-  if(!added){
-    GALLONS.forEach(function(g){
-      var o=document.createElement('option');
-      o.value=g; o.textContent=g+' 加侖';
-      gSel.appendChild(o);
-    });
-  }
+  if(!added){GALLONS.forEach(function(g){var o=document.createElement('option');o.value=g;o.textContent=g+' 加侖';sel.appendChild(o);});}
   fillOutInfo();
 }
 
 function fillOutInfo(){
-  var itemId=document.getElementById('outItem').value;
+  var id=document.getElementById('outItem').value;
   var box=document.getElementById('outInfo');
-  if(!itemId){ box.style.display='none'; return; }
-  var item=items.find(function(i){ return i.id===itemId; });
-  // show all gallons
-  var rows='';
-  var shown=false;
+  if(!id){box.style.display='none';return;}
+  var item=items.find(function(i){return i.id===id;});
+  var rows='';var shown=false;
   GALLONS.forEach(function(g){
-    if(item['qty'+g]===undefined&&item['price'+g]===undefined&&item['warn'+g]===undefined) return;
+    if(!hasG(item,g))return;
     shown=true;
     rows+='<div class="oi-g"><div class="oi-gval">'+gQty(item,g)+'</div><div class="oi-glabel">'+g+' 加侖</div></div>';
   });
-  if(!shown){
-    rows='<div class="oi-g"><div class="oi-gval">'+(item.qty||0)+'</div><div class="oi-glabel">桶</div></div>';
-  }
+  if(!shown)rows='<div class="oi-g"><div class="oi-gval">'+(item.qty||0)+'</div><div class="oi-glabel">桶</div></div>';
   document.getElementById('outInfoRow').innerHTML=rows;
   box.style.display='block';
 }
 
-function buildStaffSelect(){
+function buildStaffSel(){
   var sel=document.getElementById('outStaff');
   sel.innerHTML='<option value="">-- 請選擇 --</option>';
-  staffList.forEach(function(name){
-    var o=document.createElement('option');
-    o.value=name; o.textContent=name; sel.appendChild(o);
-  });
+  staffList.forEach(function(name){var o=document.createElement('option');o.value=name;o.textContent=name;sel.appendChild(o);});
 }
 
 function submitOut(){
-  var itemId=document.getElementById('outItem').value;
+  var id=document.getElementById('outItem').value;
   var g=document.getElementById('outGallon').value;
   var qty=parseInt(document.getElementById('outQty').value)||0;
   var staff=document.getElementById('outStaff').value;
   var job=document.getElementById('outJob').value.trim();
   var note=document.getElementById('outNote').value.trim();
-  if(!itemId||!g){ showToast('請選擇品項與規格'); return; }
-  if(qty<=0){ showToast('請輸入數量'); return; }
-  var item=items.find(function(i){ return i.id===itemId; });
-  if(!item) return;
-
+  if(!id||!g){showToast('請選擇品項與規格');return;}
+  if(qty<=0){showToast('請輸入出庫數量');return;}
+  var item=items.find(function(i){return i.id===id;});
+  if(!item)return;
   var curQty=gQty(item,g);
-  var newQty=Math.max(0,curQty-qty);
-  var upd={}; upd['qty'+g]=newQty;
-
-  db.collection('paintItems').doc(itemId).update(upd).then(function(){
+  if(qty>curQty){showToast('出庫數量超過現有庫存（'+curQty+' 桶）');return;}
+  var newQty=curQty-qty;
+  var upd={};upd['qty'+g]=newQty;
+  db.collection('paintItems').doc(id).update(upd).then(function(){
     item['qty'+g]=newQty;
     return db.collection('outLogs').add({
-      itemId:itemId, itemName:item.name||'', brand:item.brand||'',
-      gallon:g, qty:qty, staff:staff, job:job, note:note, date:today(),
+      itemId:id,itemName:item.name||'',brand:item.brand||'',
+      gallon:g,qty:qty,staff:staff,job:job,note:note,date:today(),
       createdAt:firebase.firestore.FieldValue.serverTimestamp()
     });
   }).then(function(){
-    ['outQty','outJob','outNote'].forEach(function(id){ document.getElementById(id).value=''; });
+    ['outQty','outJob','outNote'].forEach(function(eid){document.getElementById(eid).value='';});
     document.getElementById('outStaff').value='';
     document.getElementById('outGallon').innerHTML='<option value="">-- 請先選品項 --</option>';
     document.getElementById('outItem').value='';
@@ -918,7 +765,7 @@ function submitOut(){
     showToast('出庫 '+qty+' 桶（'+g+' 加侖）');
     return db.collection('outLogs').get();
   }).then(function(s){
-    outLogs=s.docs.map(function(d){ return Object.assign({id:d.id},d.data()); });
+    outLogs=s.docs.map(function(d){return Object.assign({id:d.id},d.data());});
     outLogs.sort(function(a,b){
       var ta=a.createdAt&&a.createdAt.toDate?a.createdAt.toDate().getTime():0;
       var tb=b.createdAt&&b.createdAt.toDate?b.createdAt.toDate().getTime():0;
@@ -930,177 +777,249 @@ function submitOut(){
 
 function renderOutLog(){
   var el=document.getElementById('outLogList');
-  if(!outLogs.length){ el.innerHTML='<div class="empty-state">暫無記錄</div>'; return; }
+  if(!outLogs.length){el.innerHTML='<div class="empty-state">暫無記錄</div>';return;}
   el.innerHTML=outLogs.slice(0,30).map(function(l){
     var parts=[];
-    if(l.gallon) parts.push(l.gallon+' 加侖');
-    if(l.staff)  parts.push(l.staff);
-    if(l.job)    parts.push('工作號：'+l.job);
-    if(l.note)   parts.push(l.note);
-    return '<div class="out-row">'
-      +'<div class="out-main">'+esc(l.itemName||'')+(l.brand?' ('+esc(l.brand)+')':'')+' — <span style="color:var(--primary);font-weight:700;">'+l.qty+' 桶</span></div>'
-      +'<div class="out-sub">'+esc(l.date||'')+(parts.length?' · '+parts.map(esc).join(' · '):'')+'</div>'
-      +'</div>';
+    if(l.gallon)parts.push(l.gallon+' 加侖');
+    if(l.staff)parts.push(l.staff);
+    if(l.job)parts.push('工作號：'+l.job);
+    if(l.note)parts.push(l.note);
+    return '<div class="out-row"><div class="out-main">'+esc(l.itemName||'')+(l.brand?' ('+esc(l.brand)+')':'')+
+      ' — <span style="color:var(--primary);font-weight:700;">'+l.qty+' 桶</span></div>'+
+      '<div class="out-sub">'+esc(l.date||'')+(parts.length?' · '+parts.map(esc).join(' · '):'')+'</div></div>';
   }).join('');
 }
 
-// ══════════════════════════════
-//  點貨
-// ══════════════════════════════
-// checkInputs = { 'itemId_gallon': qty }
+// ══════════════════════════════════════════
+// 點貨
+// ══════════════════════════════════════════
 function renderCheck(){
   var el=document.getElementById('checkContent');
-  var groups={};
-  CAT_ORDER.forEach(function(c){ groups[c]=[]; });
+  var groups={};var orderedCats=[];
   items.forEach(function(item){
-    var cat=item.category||'other';
-    if(!groups[cat]) groups[cat]=[];
+    var cat=item.category||'其他';
+    if(!groups[cat]){groups[cat]=[];orderedCats.push(cat);}
     groups[cat].push(item);
   });
-  var html='';
-  CAT_ORDER.forEach(function(cat){
-    if(!groups[cat].length) return;
-    html+='<div class="check-group"><div class="check-group-header">'+catLabel(cat)+'</div>'
-      +'<div class="check-thead"><div>品名 / 規格</div><div class="cc">系統</div><div class="cc">實盤</div><div class="cc">差異</div></div>';
+  var sorted=[];
+  categories.forEach(function(c){if(groups[c])sorted.push(c);});
+  orderedCats.forEach(function(c){if(sorted.indexOf(c)<0)sorted.push(c);});
 
+  var html='';
+  sorted.forEach(function(cat){
+    if(!groups[cat]||!groups[cat].length)return;
+    html+='<div class="check-group"><div class="check-group-header">'+esc(cat)+'</div>'+
+      '<div class="check-thead"><div>品名</div><div class="cc">系統</div><div class="cc">實盤</div><div class="cc">差異</div></div>';
     groups[cat].forEach(function(item){
       var hasAny=false;
       GALLONS.forEach(function(g){
-        if(item['qty'+g]===undefined&&item['price'+g]===undefined&&item['warn'+g]===undefined) return;
+        if(!hasG(item,g))return;
         hasAny=true;
-        var sys=gQty(item,g);
-        var ck=item.id+'_'+g;
+        var sys=gQty(item,g),ck=item.id+'_'+g;
         var val=checkInputs[ck]!==undefined?checkInputs[ck]:'';
         var diff=val!==''?(parseInt(val)-sys):null;
         var dCls=diff===null?'':diff>0?'diff-pos':diff<0?'diff-neg':'diff-zero';
         var dStr=diff===null?'—':diff>0?'+'+diff:String(diff);
-        html+='<div class="check-row">'
-          +'<div><div style="font-weight:600;font-size:12px;">'+esc(item.name||'')+'</div>'
-          +'<div style="font-size:11px;color:var(--text-sub);">'+g+' 加侖</div></div>'
-          +'<div class="cc" style="font-weight:700;color:var(--primary);">'+sys+'</div>'
-          +'<div><input type="number" min="0" value="'+esc(val)+'" placeholder="—" onchange="setCheckInput(\''+ck+'\',this.value)"></div>'
-          +'<div class="cc"><span class="'+dCls+'">'+dStr+'</span></div>'
-          +'</div>';
+        html+='<div class="check-row"><div><div style="font-weight:600;">'+esc(item.name||'')+'</div><div style="font-size:11px;color:var(--text-sub);">'+g+' 加侖</div></div>'+
+          '<div class="cc" style="font-weight:700;color:var(--primary);">'+sys+'</div>'+
+          '<div><input type="number" min="0" value="'+esc(val)+'" placeholder="—" onchange="setCheckInput(\''+ck+'\',this.value)"></div>'+
+          '<div class="cc"><span class="'+dCls+'">'+dStr+'</span></div></div>';
       });
-      // 舊格式相容
       if(!hasAny){
-        var sys=item.qty||0;
-        var ck=item.id+'_old';
+        var sys=item.qty||0,ck=item.id+'_old';
         var val=checkInputs[ck]!==undefined?checkInputs[ck]:'';
         var diff=val!==''?(parseInt(val)-sys):null;
         var dCls=diff===null?'':diff>0?'diff-pos':diff<0?'diff-neg':'diff-zero';
         var dStr=diff===null?'—':diff>0?'+'+diff:String(diff);
-        html+='<div class="check-row">'
-          +'<div><div style="font-weight:600;font-size:12px;">'+esc(item.name||'')+'</div>'
-          +'<div style="font-size:11px;color:var(--text-sub);">'+(item.size||'')+'</div></div>'
-          +'<div class="cc" style="font-weight:700;color:var(--primary);">'+sys+'</div>'
-          +'<div><input type="number" min="0" value="'+esc(val)+'" placeholder="—" onchange="setCheckInput(\''+ck+'\',this.value)"></div>'
-          +'<div class="cc"><span class="'+dCls+'">'+dStr+'</span></div>'
-          +'</div>';
+        html+='<div class="check-row"><div><div style="font-weight:600;">'+esc(item.name||'')+'</div><div style="font-size:11px;color:var(--text-sub);">'+(item.size||'')+'</div></div>'+
+          '<div class="cc" style="font-weight:700;color:var(--primary);">'+sys+'</div>'+
+          '<div><input type="number" min="0" value="'+esc(val)+'" placeholder="—" onchange="setCheckInput(\''+ck+'\',this.value)"></div>'+
+          '<div class="cc"><span class="'+dCls+'">'+dStr+'</span></div></div>';
       }
     });
     html+='</div>';
   });
-  if(!html) html='<div class="empty-state">尚無品項</div>';
+  if(!html)html='<div class="empty-state">尚無品項</div>';
   el.innerHTML=html;
 }
 
-function setCheckInput(k,val){ checkInputs[k]=val; renderCheck(); }
+function setCheckInput(k,val){checkInputs[k]=val;renderCheck();}
 
 function submitCheck(){
-  var keys=Object.keys(checkInputs).filter(function(k){ return checkInputs[k]!==''; });
-  if(!keys.length){ showToast('請先填入實盤數量'); return; }
-  var promises=keys.map(function(k){
+  var keys=Object.keys(checkInputs).filter(function(k){return checkInputs[k]!=='';});
+  if(!keys.length){showToast('請先填入實盤數量');return;}
+  Promise.all(keys.map(function(k){
     var qty=parseInt(checkInputs[k]);
-    if(isNaN(qty)) return Promise.resolve();
-    var parts=k.split('_');
-    var itemId=parts[0];
-    var g=parts[1];
-    var item=items.find(function(i){ return i.id===itemId; });
-    if(g==='old'){
-      if(item) item.qty=qty;
-      return db.collection('paintItems').doc(itemId).update({qty:qty});
-    } else {
-      if(item) item['qty'+g]=qty;
-      var upd={}; upd['qty'+g]=qty;
-      return db.collection('paintItems').doc(itemId).update(upd);
-    }
-  });
-  Promise.all(promises).then(function(){
+    if(isNaN(qty))return Promise.resolve();
+    var parts=k.split('_'),itemId=parts[0],g=parts[1];
+    var item=items.find(function(i){return i.id===itemId;});
+    if(g==='old'){if(item)item.qty=qty;return db.collection('paintItems').doc(itemId).update({qty:qty});}
+    else{if(item)item['qty'+g]=qty;var upd={};upd['qty'+g]=qty;return db.collection('paintItems').doc(itemId).update(upd);}
+  })).then(function(){
     checkInputs={};
     showToast('盤點完成，已更新 '+keys.length+' 項');
     renderCheck();
   });
 }
 
-// ══════════════════════════════
-//  設定 — 人員
-// ══════════════════════════════
+// ══════════════════════════════════════════
+// 設定
+// ══════════════════════════════════════════
 function renderStaffList(){
   var el=document.getElementById('staffListEl');
-  if(!staffList.length){
-    el.innerHTML='<div style="padding:14px;font-size:13px;color:var(--text-sub);text-align:center;">尚無人員</div>';
-    return;
-  }
+  if(!staffList.length){el.innerHTML='<div style="padding:14px;font-size:13px;color:var(--text-sub);text-align:center;">尚無人員</div>';return;}
   el.innerHTML=staffList.map(function(name,i){
-    return '<div class="staff-item"><span>'+esc(name)+'</span>'
-      +'<button class="btn btn-danger btn-sm" onclick="removeStaff('+i+')">刪除</button></div>';
+    return '<div class="manage-item"><span>'+esc(name)+'</span><button class="btn btn-danger btn-sm" onclick="removeStaff('+i+')">刪除</button></div>';
   }).join('');
 }
-
 function addStaff(){
   var name=document.getElementById('newStaffName').value.trim();
-  if(!name){ showToast('請輸入人員姓名'); return; }
-  if(staffList.indexOf(name)>=0){ showToast('此人員已存在'); return; }
-  staffList.push(name); saveStaff();
+  if(!name){showToast('請輸入姓名');return;}
+  if(staffList.indexOf(name)>=0){showToast('已存在');return;}
+  staffList.push(name);saveSettings().then(function(){renderStaffList();showToast('已新增');});
   document.getElementById('newStaffName').value='';
 }
-function removeStaff(i){ staffList.splice(i,1); saveStaff(); }
-function saveStaff(){
-  db.collection('settings').doc('staff').set({list:staffList}).then(function(){
-    renderStaffList(); showToast('人員名單已更新');
-  });
+function removeStaff(i){staffList.splice(i,1);saveSettings().then(function(){renderStaffList();showToast('已刪除');});}
+
+function renderCatList(){
+  var el=document.getElementById('catListEl');
+  el.innerHTML=categories.map(function(name,i){
+    return '<div class="manage-item"><span>'+esc(name)+'</span><button class="btn btn-danger btn-sm" onclick="removeCat('+i+')">刪除</button></div>';
+  }).join('');
+}
+function addCat(){
+  var name=document.getElementById('newCatName').value.trim();
+  if(!name){showToast('請輸入分類名稱');return;}
+  if(categories.indexOf(name)>=0){showToast('已存在');return;}
+  categories.push(name);saveSettings().then(function(){renderCatList();showToast('已新增');});
+  document.getElementById('newCatName').value='';
+}
+function removeCat(i){categories.splice(i,1);saveSettings().then(function(){renderCatList();showToast('已刪除');});}
+
+function renderBrandList(){
+  var el=document.getElementById('brandListEl');
+  el.innerHTML=brands.map(function(name,i){
+    return '<div class="manage-item"><span>'+esc(name)+'</span><button class="btn btn-danger btn-sm" onclick="removeBrand('+i+')">刪除</button></div>';
+  }).join('');
+}
+function addBrand(){
+  var name=document.getElementById('newBrandName').value.trim();
+  if(!name){showToast('請輸入廠牌名稱');return;}
+  if(brands.indexOf(name)>=0){showToast('已存在');return;}
+  brands.push(name);saveSettings().then(function(){renderBrandList();showToast('已新增');});
+  document.getElementById('newBrandName').value='';
+}
+function removeBrand(i){brands.splice(i,1);saveSettings().then(function(){renderBrandList();showToast('已刪除');});}
+
+function buildAddSelects(){
+  var bSel=document.getElementById('addBrand');
+  bSel.innerHTML='<option value="">-- 選廠牌 --</option>';
+  brands.forEach(function(b){var o=document.createElement('option');o.value=b;o.textContent=b;bSel.appendChild(o);});
+  var cSel=document.getElementById('addCat');
+  cSel.innerHTML='<option value="">-- 選分類 --</option>';
+  categories.forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=c;cSel.appendChild(o);});
 }
 
-// ══════════════════════════════
-//  設定 — 新增品項
-// ══════════════════════════════
-function previewCat(val){
-  var box=document.getElementById('addCatPreview');
-  if(!val.trim()){ box.style.display='none'; return; }
-  box.textContent='自動分類：'+catLabel(detectCat(val));
-  box.style.display='block';
+function renderItemManage(){
+  var el=document.getElementById('itemManageList');
+  if(!items.length){el.innerHTML='<div class="empty-state">尚無品項</div>';return;}
+  el.innerHTML='<div class="manage-list">'+items.map(function(item){
+    return '<div class="manage-item">'+
+      '<div><div style="font-weight:600;font-size:14px;">'+esc(item.name||'')+'</div>'+
+      '<div style="font-size:11px;color:var(--text-sub);">'+(item.brand||'')+(item.category?' · '+item.category:'')+'</div></div>'+
+      '<button class="btn btn-warn btn-sm" onclick="openEdit(\''+item.id+'\')">編輯</button>'+
+      '</div>';
+  }).join('')+'</div>';
 }
 
-function submitAdd(){
-  var name=document.getElementById('addName').value.trim();
-  var brand=document.getElementById('addBrand').value.trim();
-  if(!name){ showToast('請輸入品名'); return; }
-  var category=detectCat(name);
+// ── 編輯品項 ──
+function openEdit(id){
+  var item=items.find(function(i){return i.id===id;});
+  if(!item)return;
+  document.getElementById('editId').value=id;
+  document.getElementById('editName').value=item.name||'';
 
-  var data={ name:name, brand:brand, category:category,
-    createdAt:firebase.firestore.FieldValue.serverTimestamp() };
+  // 填廠牌選單
+  var bSel=document.getElementById('editBrand');
+  bSel.innerHTML='<option value="">-- 選廠牌 --</option>';
+  brands.forEach(function(b){var o=document.createElement('option');o.value=b;o.textContent=b;if(b===item.brand)o.selected=true;bSel.appendChild(o);});
+
+  // 填分類選單
+  var cSel=document.getElementById('editCat');
+  cSel.innerHTML='<option value="">-- 選分類 --</option>';
+  categories.forEach(function(c){var o=document.createElement('option');o.value=c;o.textContent=c;if(c===item.category)o.selected=true;cSel.appendChild(o);});
 
   GALLONS.forEach(function(g){
-    var qtyEl=document.getElementById('add'+g+'qty');
-    var priceEl=document.getElementById('add'+g+'price');
-    var warnEl=document.getElementById('add'+g+'warn');
-    var qty=qtyEl&&qtyEl.value!==''?parseInt(qtyEl.value):undefined;
-    var price=priceEl&&priceEl.value!==''?parseFloat(priceEl.value):undefined;
-    var warn=warnEl&&warnEl.value!==''?parseInt(warnEl.value):undefined;
-    // 只存有值的欄位
-    if(qty!==undefined&&!isNaN(qty)) data['qty'+g]=qty;
-    if(price!==undefined&&!isNaN(price)) data['price'+g]=price;
-    if(warn!==undefined&&!isNaN(warn)) data['warn'+g]=warn;
+    document.getElementById('edit'+g+'qty').value=item['qty'+g]!==undefined?item['qty'+g]:'';
+    document.getElementById('edit'+g+'price').value=item['price'+g]!==undefined?item['price'+g]:'';
+    document.getElementById('edit'+g+'warn').value=item['warn'+g]!==undefined?item['warn'+g]:'';
   });
+  document.getElementById('editModal').classList.add('open');
+}
 
+function closeEdit(){document.getElementById('editModal').classList.remove('open');}
+
+function saveEdit(){
+  var id=document.getElementById('editId').value;
+  var name=document.getElementById('editName').value.trim();
+  var brand=document.getElementById('editBrand').value;
+  var category=document.getElementById('editCat').value;
+  if(!name){showToast('請輸入品名');return;}
+  var data={name:name,brand:brand,category:category};
+  GALLONS.forEach(function(g){
+    var qty=document.getElementById('edit'+g+'qty').value;
+    var price=document.getElementById('edit'+g+'price').value;
+    var warn=document.getElementById('edit'+g+'warn').value;
+    data['qty'+g]=qty!==''?parseInt(qty):firebase.firestore.FieldValue.delete();
+    data['price'+g]=price!==''?parseFloat(price):firebase.firestore.FieldValue.delete();
+    data['warn'+g]=warn!==''?parseInt(warn):firebase.firestore.FieldValue.delete();
+  });
+  db.collection('paintItems').doc(id).update(data).then(function(){
+    var item=items.find(function(i){return i.id===id;});
+    if(item)Object.assign(item,data);
+    sortItems();
+    closeEdit();
+    renderItemManage();
+    renderInv();
+    showToast('已更新「'+name+'」');
+  });
+}
+
+function deleteItem(){
+  var id=document.getElementById('editId').value;
+  var name=document.getElementById('editName').value;
+  if(!confirm('確定要刪除「'+name+'」？'))return;
+  db.collection('paintItems').doc(id).delete().then(function(){
+    items=items.filter(function(i){return i.id!==id;});
+    closeEdit();renderItemManage();renderInv();
+    showToast('已刪除「'+name+'」');
+  });
+}
+
+// ── 新增品項 ──
+function submitAdd(){
+  var name=document.getElementById('addName').value.trim();
+  var brand=document.getElementById('addBrand').value;
+  var category=document.getElementById('addCat').value;
+  if(!name){showToast('請輸入品名');return;}
+  var data={name:name,brand:brand,category:category,createdAt:firebase.firestore.FieldValue.serverTimestamp()};
+  GALLONS.forEach(function(g){
+    var qty=document.getElementById('add'+g+'qty').value;
+    var price=document.getElementById('add'+g+'price').value;
+    var warn=document.getElementById('add'+g+'warn').value;
+    if(qty!=='')data['qty'+g]=parseInt(qty);
+    if(price!=='')data['price'+g]=parseFloat(price);
+    if(warn!=='')data['warn'+g]=parseInt(warn);
+  });
   db.collection('paintItems').add(data).then(function(ref){
     items.push(Object.assign({id:ref.id},data));
     sortItems();
-    ['addName','addBrand','add1qty','add1price','add1warn','add3qty','add3price','add3warn','add5qty','add5price','add5warn']
-      .forEach(function(id){ var el=document.getElementById(id); if(el) el.value=''; });
-    document.getElementById('addCatPreview').style.display='none';
-    showToast('已新增「'+name+'」('+catLabel(category)+')');
+    ['addName','add1qty','add1price','add1warn','add3qty','add3price','add3warn','add5qty','add5price','add5warn']
+      .forEach(function(eid){var el=document.getElementById(eid);if(el)el.value='';});
+    document.getElementById('addBrand').value='';
+    document.getElementById('addCat').value='';
+    renderItemManage();renderInv();
+    showToast('已新增「'+name+'」');
   });
 }
 
@@ -1108,8 +1027,8 @@ function submitAdd(){
 document.getElementById('topDate').textContent=
   new Date().toLocaleDateString('zh-TW',{year:'numeric',month:'long',day:'numeric',weekday:'long'});
 
-loadAll().then(function(){ renderInv(); }).catch(function(e){
-  console.error(e); showToast('載入失敗，請重新整理');
+loadAll().then(function(){renderInv();}).catch(function(e){
+  console.error(e);showToast('載入失敗，請重新整理');
 });
 </script>
 </body>
