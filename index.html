@@ -700,7 +700,7 @@ function loadRecvOrder(){
       '<div class="recv-sub">'+l.gallon+' 加侖　叫貨：'+l.qty+' 桶'+(l.note?' · '+esc(l.note):'')+'</div>'+
       '<div class="recv-input-row">'+
         '<label>實際到貨：</label>'+
-        '<input type="number" min="0" max="'+l.qty+'" value="'+l.qty+'" style="max-width:100px;" onchange="setRecvInput(\''+key+'\',this.value)">'+
+        '<input type="number" min="0" max="'+l.qty+'" value="'+l.qty+'" inputmode="numeric" pattern="[0-9]*" style="max-width:100px;" onchange="setRecvInput(\''+key+'\',this.value)">'+
         '<span style="font-size:14px;color:var(--text-sub);">桶</span>'+
       '</div></div>';
   });
