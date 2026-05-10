@@ -780,7 +780,7 @@ function renderOrderLog(){
       html+='<div class="order-row" id="olog_'+l.id+'">'+
         '<div style="flex:1;">'+
           '<div class="or-name">'+esc(l.itemName||'')+'</div>'+
-          '<div style="font-size:17px;font-weight:700;color:var(--primary);margin-top:4px;">'+l.gallon+' 加侖　'+l.qty+' 桶'+(l.note?'　<span style="font-size:14px;font-weight:400;color:var(--text-sub);">'+esc(l.note)+'</span>':'')+'</div>'+
+          '<div style="font-size:14px;font-weight:700;color:var(--primary);margin-top:4px;">'+l.gallon+' 加侖　'+l.qty+' 桶'+(l.note?'　<span style="font-size:14px;font-weight:400;color:var(--text-sub);">'+esc(l.note)+'</span>':'')+'</div>'+
         '</div>'+
         '<button class="btn btn-danger btn-sm" onclick="deleteOrderItem(\''+l.id+'\')">刪除</button>'+
       '</div>';
