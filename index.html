@@ -763,18 +763,24 @@ function renderOrderLog(){
   var html='';
   noOrder.forEach(function(no){
     var g=byNo[no];
-    html+='<div class="order-group">'+
-      '<div class="order-group-header">'+
-        '<div><span class="ogh-date">'+formatDateCN(g.date)+'</span><br><span class="ogh-no">單號：'+esc(no)+'</span></div>'+
-        '<button class="btn btn-danger btn-sm" onclick="deleteOrderGroup(\''+esc(no)+'\')">刪除整張單</button>'+
+    var safeNo=no.replace(/'/g,"\\'");
+    html+='<div class="order-group" style="margin-bottom:12px;">'+
+      '<div class="order-group-header" onclick="toggleOrderGroup(\'og_'+safeNo+'\')" style="cursor:pointer;">'+
+        '<div>'+
+          '<div class="ogh-date">'+formatDateCN(g.date)+'</div>'+
+          '<div class="ogh-no">單號：'+esc(no)+'　共 '+g.logs.length+' 項</div>'+
+        '</div>'+
+        '<div style="display:flex;align-items:center;gap:8px;">'+
+          '<button class="btn btn-danger btn-sm" onclick="event.stopPropagation();deleteOrderGroup(\''+safeNo+'\')">刪除整張單</button>'+
+          '<span id="og_arr_'+safeNo+'" style="color:#fff;font-size:18px;">▼</span>'+
+        '</div>'+
       '</div>'+
-      '<div class="order-group-body">';
+      '<div class="order-group-body" id="og_'+safeNo+'" style="display:none;">';
     g.logs.forEach(function(l){
       html+='<div class="order-row" id="olog_'+l.id+'">'+
         '<div style="flex:1;">'+
-          '<div class="or-name">'+esc(l.itemName||'')+(l.brand?' ('+esc(l.brand)+')':'')+'</div>'+
-          '<div class="or-sub">'+l.gallon+' 加侖'+(l.note?' · '+esc(l.note):'')+'</div>'+
-          '<div class="or-qty">'+l.qty+' 桶</div>'+
+          '<div class="or-name">'+esc(l.itemName||'')+'</div>'+
+          '<div style="font-size:17px;font-weight:700;color:var(--primary);margin-top:4px;">'+l.gallon+' 加侖　'+l.qty+' 桶'+(l.note?'　<span style="font-size:14px;font-weight:400;color:var(--text-sub);">'+esc(l.note)+'</span>':'')+'</div>'+
         '</div>'+
         '<button class="btn btn-danger btn-sm" onclick="deleteOrderItem(\''+l.id+'\')">刪除</button>'+
       '</div>';
@@ -782,6 +788,20 @@ function renderOrderLog(){
     html+='</div></div>';
   });
   el.innerHTML=html;
+}
+
+function toggleOrderGroup(id){
+  var el=document.getElementById(id);
+  var no=id.replace('og_','');
+  var arr=document.getElementById('og_arr_'+no);
+  if(!el)return;
+  if(el.style.display==='none'){
+    el.style.display='block';
+    if(arr)arr.textContent='▲';
+  }else{
+    el.style.display='none';
+    if(arr)arr.textContent='▼';
+  }
 }
 function deleteOrderItem(id){
   if(!confirm('確定刪除這筆叫貨記錄？'))return;
