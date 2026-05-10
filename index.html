@@ -475,7 +475,7 @@ function hasStock(item,g){return hasG(item,g)&&gQty(item,g)>0;}
 function itemLevel(item){
   var crit=false,low=false;
   GALLONS.forEach(function(g){
-    if(!hasG(item,g))return;
+    if(!hasG(item,g)||gQty(item,g)===0)return;
     var qty=gQty(item,g),warn=gWarn(item,g);
     if(warn>0&&qty<=Math.max(1,Math.floor(warn*0.4)))crit=true;
     else if(warn>0&&qty<=warn)low=true;
