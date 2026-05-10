@@ -111,7 +111,7 @@
   .ogh-date{font-size:15px;font-weight:700;}
   .ogh-no{font-size:12px;opacity:.7;}
   .order-group-body{border:1.5px solid var(--border);border-top:none;border-radius:0 0 var(--radius) var(--radius);}
-  .order-row{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface);}
+  .order-row{padding:14px 16px;border-bottom:1px solid var(--border);background:var(--surface);font-size:13px;display:flex;align-items:center;gap:10px;}
   .order-row:last-child{border-bottom:none;}
   .order-row:nth-child(even){background:var(--surface2);}
   .or-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:4px;}
@@ -765,17 +765,44 @@ function renderOrderLog(){
   noOrder.forEach(function(no){
     var g=byNo[no];
     html+='<div class="order-group">'+
-      '<div class="order-group-header"><span class="ogh-date">'+formatDateCN(g.date)+'</span><span class="ogh-no">單號：'+esc(no)+'</span></div>'+
+      '<div class="order-group-header">'+
+        '<div><span class="ogh-date">'+formatDateCN(g.date)+'</span><br><span class="ogh-no">單號：'+esc(no)+'</span></div>'+
+        '<button class="btn btn-danger btn-sm" onclick="deleteOrderGroup(\''+esc(no)+'\')">刪除整張單</button>'+
+      '</div>'+
       '<div class="order-group-body">';
     g.logs.forEach(function(l){
-      html+='<div class="order-row">'+
-        '<div class="or-name">'+esc(l.itemName||'')+(l.brand?' ('+esc(l.brand)+')':'')+'</div>'+
-        '<div class="or-sub">'+l.gallon+' 加侖'+(l.note?' · '+esc(l.note):'')+'</div>'+
-        '<div class="or-qty">'+l.qty+' 桶</div></div>';
+      html+='<div class="order-row" id="olog_'+l.id+'">'+
+        '<div style="flex:1;">'+
+          '<div class="or-name">'+esc(l.itemName||'')+(l.brand?' ('+esc(l.brand)+')':'')+'</div>'+
+          '<div class="or-sub">'+l.gallon+' 加侖'+(l.note?' · '+esc(l.note):'')+'</div>'+
+          '<div class="or-qty">'+l.qty+' 桶</div>'+
+        '</div>'+
+        '<button class="btn btn-danger btn-sm" onclick="deleteOrderItem(\''+l.id+'\')">刪除</button>'+
+      '</div>';
     });
     html+='</div></div>';
   });
   el.innerHTML=html;
+}
+function deleteOrderItem(id){
+  if(!confirm('確定刪除這筆叫貨記錄？'))return;
+  db.collection('orderLogs').doc(id).delete().then(function(){
+    orderLogs=orderLogs.filter(function(l){return l.id!==id;});
+    renderOrderLog();
+    showToast('已刪除');
+  });
+}
+
+function deleteOrderGroup(no){
+  if(!confirm('確定刪除整張叫貨單「'+no+'」？此操作無法復原。'))return;
+  var targets=orderLogs.filter(function(l){return (l.orderNo||fmtDate(l.date))===no;});
+  Promise.all(targets.map(function(l){
+    return db.collection('orderLogs').doc(l.id).delete();
+  })).then(function(){
+    orderLogs=orderLogs.filter(function(l){return (l.orderNo||fmtDate(l.date))!==no;});
+    renderOrderLog();
+    showToast('整張單已刪除');
+  });
 }
 
 // ══════ 出庫（只顯示有庫存的品項+規格） ══════
