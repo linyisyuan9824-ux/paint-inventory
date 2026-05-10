@@ -363,10 +363,7 @@
           <option value="">-- 請先選品項 --</option>
         </select>
       </div>
-      <div>
-        <label>出庫數量（桶）</label>
-        <input type="number" id="outQty" min="1" placeholder="桶數">
-      </div>
+      <div id="outQtyWrap"></div>
     </div>
     <div id="outInfo">
       <div class="oi-label">各規格現有庫存</div>
@@ -667,31 +664,50 @@ function buildOrderItemSelect(){
   document.getElementById('orderGallon').innerHTML='<option value="">-- 請先選品項 --</option>';
 }
 
-function buildGallonSelect(){
-  var itemId=document.getElementById('orderItem').value;
-  var sel=document.getElementById('orderGallon');
-  sel.innerHTML='';
-  if(!itemId){ sel.innerHTML='<option value="">-- 請先選品項 --</option>'; return; }
+function buildOutGallonSelect(){
+  var itemId=document.getElementById('outItem').value;
+  var gSel=document.getElementById('outGallon');
+  gSel.innerHTML='';
+  document.getElementById('outInfo').style.display='none';
+  document.getElementById('outQtyWrap').innerHTML='';
+  if(!itemId){ gSel.innerHTML='<option value="">-- 請先選品項 --</option>'; return; }
   var item=items.find(function(i){ return i.id===itemId; });
   var added=0;
   GALLONS.forEach(function(g){
-    // 只顯示有資料的加侖
     if(item['qty'+g]===undefined&&item['price'+g]===undefined&&item['warn'+g]===undefined) return;
+    var qty=gQty(item,g);
+    if(qty<=0) return; // 庫存0就不顯示
     var o=document.createElement('option');
     o.value=g;
-    o.textContent=g+' 加侖（現有 '+gQty(item,g)+' 桶）';
-    sel.appendChild(o);
+    o.textContent=g+' 加侖（現有 '+qty+' 桶）';
+    gSel.appendChild(o);
     added++;
   });
   if(!added){
-    // 舊格式相容：顯示全部三個
-    GALLONS.forEach(function(g){
-      var o=document.createElement('option');
-      o.value=g;
-      o.textContent=g+' 加侖';
-      sel.appendChild(o);
-    });
+    gSel.innerHTML='<option value="">庫存不足，無法出庫</option>';
+    return;
   }
+  fillOutInfo();
+}
+
+function fillOutInfo(){
+  var itemId=document.getElementById('outItem').value;
+  var g=document.getElementById('outGallon').value;
+  var box=document.getElementById('outInfo');
+  var qtyWrap=document.getElementById('outQtyWrap');
+  if(!itemId||!g){ box.style.display='none'; qtyWrap.innerHTML=''; return; }
+  var item=items.find(function(i){ return i.id===itemId; });
+  var qty=gQty(item,g);
+
+  // 顯示現有庫存
+  document.getElementById('outInfoRow').innerHTML=
+    '<div class="oi-g"><div class="oi-gval">'+qty+'</div><div class="oi-glabel">'+g+' 加侖 現有</div></div>';
+  box.style.display='block';
+
+  // 數量選單：1 到 現有桶數
+  var opts='';
+  for(var i=1;i<=qty;i++) opts+='<option value="'+i+'">'+i+' 桶</option>';
+  qtyWrap.innerHTML='<div><label>出庫數量</label><select id="outQty">'+opts+'</select></div>';
 }
 
 function addOrderDraft(){
