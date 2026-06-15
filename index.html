@@ -139,18 +139,26 @@
   .recv-done{background:var(--success-light);border-color:var(--success);}
   .recv-done .recv-name{color:var(--success);}
 
-  /* CHECK (盤點) */
-  .check-group{margin-bottom:12px;border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);}
-  .check-group-header{padding:9px 14px;background:var(--text);color:#fff;font-size:13px;font-weight:700;}
-  .check-thead{display:grid;grid-template-columns:1fr 55px 65px 55px;gap:4px;align-items:center;padding:7px 14px;background:var(--surface2);border-bottom:1px solid var(--border);font-size:11px;font-weight:600;color:var(--text-sub);}
-  .check-row{display:grid;grid-template-columns:1fr 55px 65px 55px;gap:4px;align-items:center;padding:9px 14px;background:var(--surface);border-bottom:1px solid var(--border);font-size:13px;}
-  .check-row:last-child{border-bottom:none;}
-  .check-row:nth-child(odd){background:#FAFBFD;}
-  .check-row input[type=number]{padding:5px 6px;font-size:14px;text-align:center;}
-  .cc{text-align:center;}
-  .diff-pos{color:var(--success);font-weight:700;}
-  .diff-neg{color:var(--danger);font-weight:700;}
-  .diff-zero{color:var(--text-sub);}
+ /* CHECK (盤點) — 智慧防擠、手機特大字體版 */
+  .check-group { margin-bottom: 16px; border-radius: var(--radius); box-shadow: var(--shadow); overflow: hidden; }
+  .check-group-header { padding: 12px 16px; background: var(--text); color: #fff; font-size: 16px; font-weight: 700; }
+  .check-thead { display: flex; justify-content: space-between; padding: 10px 16px; background: var(--surface2); border-bottom: 1.5px solid var(--border); font-size: 14px; font-weight: 700; color: var(--text-sub); }
+  .check-row { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; padding: 14px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  .check-row:last-child { border-bottom: none; }
+  .check-row:nth-child(odd) { background: #FAFBFD; }
+  .check-item-info { flex: 1; min-width: 120px; }
+  .check-item-name { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.3; }
+  .check-item-spec { font-size: 13px; color: var(--text-sub); font-weight: 500; margin-top: 4px; }
+  .check-data-side { display: flex; align-items: center; gap: 16px; justify-content: flex-end; }
+  .check-data-box { display: flex; flex-direction: column; align-items: center; min-width: 50px; }
+  .check-data-label { font-size: 11px; color: var(--text-sub); margin-bottom: 4px; font-weight: 500; }
+  .check-sys-val { font-size: 18px; font-weight: 700; color: var(--primary); line-height: 38px; }
+  .check-row input[type=text] { width: 70px; height: 38px; padding: 0; font-size: 18px; font-weight: 700; text-align: center; background: #fff; border: 1.5px solid var(--border); border-radius: 6px; }
+  .check-row input[type=text]:focus { border-color: var(--primary); }
+  .diff-val { font-size: 18px; font-weight: 700; line-height: 38px; }
+  .diff-pos { color: var(--success); }
+  .diff-neg { color: var(--danger); }
+  .diff-zero { color: var(--text-sub); }
 
   /* OUT */
   #outInfo{background:var(--primary-light);border-radius:8px;padding:12px 14px;margin-bottom:10px;display:none;}
@@ -948,7 +956,7 @@ function renderCheck(){
   sorted.forEach(function(cat){
     if(!groups[cat]||!groups[cat].length)return;
     html+='<div class="check-group"><div class="check-group-header">'+esc(cat)+'</div>'+
-      '<div class="check-thead"><div>品名</div><div class="cc">系統</div><div class="cc">實盤</div><div class="cc">差異</div></div>';
+      '<div class="check-thead"><div>品名項目</div><div>盤點數據</div></div>';
     groups[cat].forEach(function(item){
       var hasAny=false;
       GALLONS.forEach(function(g){
@@ -958,11 +966,18 @@ function renderCheck(){
         var diff=val!==''?(parseInt(val)-sys):null;
         var dCls=diff===null?'':diff>0?'diff-pos':diff<0?'diff-neg':'diff-zero';
         var dStr=diff===null?'—':diff>0?'+'+diff:String(diff);
-        html+='<div class="check-row"><div><div style="font-weight:600;">'+esc(item.name||'')+'</div>'+
-          '<div style="font-size:11px;color:var(--text-sub);">'+g+' 加侖</div></div>'+
-          '<div class="cc" style="font-weight:700;color:var(--primary);">'+sys+'</div>'+
-          '<div><input type="text" inputmode="numeric" pattern="[0-9]*" value="'+esc(val)+'" placeholder="—" onchange="setCheckInput(\''+ck+'\',this.value)"></div>'+
-          '<div class="cc"><span class="'+dCls+'">'+dStr+'</span></div></div>';
+        
+        html+='<div class="check-row">'+
+          '<div class="check-item-info">'+
+            '<div class="check-item-name">'+esc(item.name||'')+'</div>'+
+            '<div class="check-item-spec">'+g+' 加侖</div>'+
+          '</div>'+
+          '<div class="check-data-side">'+
+            '<div class="check-data-box"><span class="check-data-label">系統</span><span class="check-sys-val">'+sys+'</span></div>'+
+            '<div class="check-data-box"><span class="check-data-label">實盤</span><input type="text" inputmode="numeric" pattern="[0-9]*" value="'+esc(val)+'" placeholder="—" onchange="setCheckInput(\''+ck+'\',this.value)"></div>'+
+            '<div class="check-data-box"><span class="check-data-label">差異</span><span class="diff-val '+dCls+'">'+dStr+'</span></div>'+
+          '</div>'+
+        '</div>';
       });
       if(!hasAny){
         var sys=item.qty||0,ck=item.id+'_old';
@@ -970,11 +985,18 @@ function renderCheck(){
         var diff=val!==''?(parseInt(val)-sys):null;
         var dCls=diff===null?'':diff>0?'diff-pos':diff<0?'diff-neg':'diff-zero';
         var dStr=diff===null?'—':diff>0?'+'+diff:String(diff);
-        html+='<div class="check-row"><div><div style="font-weight:600;">'+esc(item.name||'')+'</div>'+
-          '<div style="font-size:11px;color:var(--text-sub);">'+(item.size||'')+'</div></div>'+
-          '<div class="cc" style="font-weight:700;color:var(--primary);">'+sys+'</div>'+
-          '<div><input type="text" inputmode="numeric" pattern="[0-9]*" value="'+esc(val)+'" placeholder="—" onchange="setCheckInput(\''+ck+'\',this.value)"></div>'+
-          '<div class="cc"><span class="'+dCls+'">'+dStr+'</span></div></div>';
+        
+        html+='<div class="check-row">'+
+          '<div class="check-item-info">'+
+            '<div class="check-item-name">'+esc(item.name||'')+'</div>'+
+            '<div class="check-item-spec">'+esc(item.size||'預設規格')+'</div>'+
+          '</div>'+
+          '<div class="check-data-side">'+
+            '<div class="check-data-box"><span class="check-data-label">系統</span><span class="check-sys-val">'+sys+'</span></div>'+
+            '<div class="check-data-box"><span class="check-data-label">實盤</span><input type="text" inputmode="numeric" pattern="[0-9]*" value="'+esc(val)+'" placeholder="—" onchange="setCheckInput(\''+ck+'\',this.value)"></div>'+
+            '<div class="check-data-box"><span class="check-data-label">差異</span><span class="diff-val '+dCls+'">'+dStr+'</span></div>'+
+          '</div>'+
+        '</div>';
       }
     });
     html+='</div>';
